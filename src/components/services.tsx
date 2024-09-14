@@ -15,7 +15,7 @@ const CyberSecurityServices = () => {
     <section className="bg-services-gradien py-16 px-4">
       <div className="max-w-5xl mx-auto text-center mb-12">
         <h2 className='text-purple-300 font-extrabold text-base opacity-70'>SERVICES</h2>
-        <h2 className="text-4xl font-semibold text-white mt-2 mb-4">
+        <h2 className="text-3xl font-semibold text-white mt-2 mb-4">
           Our comprehensive range of cyber<br/> security services includes
         </h2>
         <p className="text-gray-400">
