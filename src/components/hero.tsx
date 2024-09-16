@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 export const Hero = () => {
@@ -13,9 +14,13 @@ export const Hero = () => {
 
       {/* Navbar Logo */}
       <div className="w-full  shadow-sm flex justify-start items-center bg-transparent ">
-        <h1 className="text-start text-white text-2xl font-semibold p-10">
+        {/* <h1 className="text-start text-white text-2xl font-semibold p-10">
           SecureNet
-        </h1>
+        </h1> */}
+        <div className="px-5 pl-1 -mt-8 md:px-10 md:-mt-8">
+
+      <Image src="/eek-monk-logo.png"  alt="eek-monk"  width={180} height={180} className=""/>
+        </div>
       </div>
 
       {/* Main Content Div */}
