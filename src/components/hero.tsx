@@ -24,17 +24,19 @@ export const Hero = () => {
       </div>
 
       {/* Main Content Div */}
-      <div className="flex flex-row gap-3 w-full items-center justify-center h-[50vh] md:h-screen relative z-10  -mt-16 md:-mt-28 px-4">
+      <div className="flex flex-col md:flex-row gap-3 w-full items-center justify-center h-[50vh] md:h-screen relative z-10  -mt-16 md:-mt-28 px-4">
+        <div className="flex flex-col md:flex-row gap-2">
         <input
           id="search-input"
           type="text"
-          className="w-[250px] sm:w-[350px] flex gap-10 px-4 py-2 text-black rounded-md focus:outline-none focus:border-blue-500 z-20"
-          placeholder="Search"
+          className="w-[280px] sm:w-[350px] flex gap-10 px-4 py-2 text-black rounded-md focus:outline-none focus:border-blue-500 z-20"
+          placeholder="Search "
         />
 
-        <button className="py-2 px-4 rounded-md cursor-pointer text-sm font-semibold bg-white z-20 text-nowrap">
-          Get Updates
+        <button className="w-1/2 py-2 px-4 rounded-md cursor-pointer text-sm font-semibold bg-white z-20 text-nowrap">
+          Search
         </button>
+        </div>
       </div>
     </div>
   );
