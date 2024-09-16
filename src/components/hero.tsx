@@ -40,10 +40,11 @@ export const Hero = () => {
       </div>
 
       {/* Main Content Div */}
-      <div className="sticky flex flex-col md:flex-row gap-3 w-full items-center justify-start md:justify-center h-[50vh] md:h-screen z-10   md:-mt-28 px-4 overflow-visible">
+      <div className="max-h-[400px] flex flex-col md:flex-row gap-3 w-full items-center justify-start md:justify-center h-[50vh] md:h-screen z-10   md:-mt-28 px-4 overflow-visible">
         <div className="flex flex-col md:flex-row gap-2">
        <SearchBar  suggestions={customers}           onSelect={(value) => handleSelect(value)} />
         </div>
+        
       </div>
     </div>
   );

@@ -1,6 +1,4 @@
-
-
-import { Search, X } from 'lucide-react';
+import { Mic, Search, X } from 'lucide-react';
 import React, { forwardRef, useState, ChangeEvent, useEffect, useRef } from 'react';
 
 type SearchBarProps = {
@@ -12,6 +10,9 @@ type SearchBarHandle = {
   focus: () => void;
 };
 
+
+
+
 const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
   ({ suggestions, onSelect }) => {
     const [query, setQuery] = useState('');
@@ -20,16 +21,31 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
     const [debouncedQuery, setDebouncedQuery] = useState(query);
     const [error, setError] = useState<string | null>(null);
     const [justSelected, setJustSelected] = useState(false);
-
+    const [listening, setListening] = useState(false);
+    const [endSpeech, setEndSpeech] = useState(false);
 
     const searchBarRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null); // Manage input focus manually
 
     useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
+          setShowSuggestions(false);
+          setEndSpeech(true) // Close suggestions if clicked outside
+        }
+      };
+  
+      document.addEventListener('mousedown', handleClickOutside);
+  
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, []);
+   
+    useEffect(() => {
       const handler = setTimeout(() => {
         setDebouncedQuery(query);
       }, 300);
-
       return () => {
         clearTimeout(handler);
       };
@@ -65,26 +81,11 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
     }, [debouncedQuery, suggestions, justSelected]);
 
     useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
-          setShowSuggestions(false);
-        }
-      };
-
-      document.addEventListener('mousedown', handleClickOutside);
-
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }, []);
-
-    useEffect(() => {
       if (inputRef.current) {
-        console.log('blur');
         // Remove focus from the input when the bottom sheet opens
         inputRef.current.blur();
       }
-    },[]);
+    }, []);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (justSelected) {
@@ -107,39 +108,101 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
       }
     };
 
+
+
+  
+
+    // Speech-to-text logic
+    const SpeechRecog = () => {
+      const SpeechRecognition = (window).SpeechRecognition || (window ).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        setError('Speech recognition not supported in this browser');
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+
+      if (endSpeech) {
+        recognition.stop();
+        setListening(false);
+        setEndSpeech(false);
+        return;
+      }
+
+      recognition.onstart = () => {
+        console.log("Listening...");
+        setListening(true);
+      };
+
+      recognition.onspeechend = () => {
+        recognition.stop();
+        console.log("Stopped listening");
+        setListening(false);
+      };
+
+      recognition.onresult = (event ) => {
+        const transcript = event.results[0][0].transcript;
+        setQuery(transcript); // Update the input with speech result
+      };
+
+
+      recognition.start();
+    };
+
+
+const clearButtonClicked = () => {
+        setQuery('');
+        setFilteredSuggestions([]);
+        setShowSuggestions(false);
+        setJustSelected(false);
+        setListening(false);
+        }
+
+
     return (
-      <div className="relative  flex  justify-center items-center  w-full max-w-md mx-auto">
-       <div className='relative w-[350px]  px-5 bg-white border border-gray-300 rounded-full '>
-       {!query && (
+      <div className="relative  flex  justify-center items-center  w-full max-w-md mx-auto" ref={searchBarRef}>
+        <div className='relative w-[350px]  px-5 bg-white border border-gray-300 rounded-full '>
           <div className="absolute left-0 top-0 p-2 pt-3">
             <Search size={20} color="#B4B4B8" />
           </div>
-        )}
-        <input
-          ref={inputRef}
-          id="search-input"
-          type="text"
-          value={query}
-        
-          // tabIndex={isSheetOpen ? -1 : 0} // Disable tabbing into input when bottom sheet is open
-          onChange={handleChange}
-          className="w-full flex gap-10  px-4 py-2 focus:outline-none focus:border-blue-500"
-          placeholder="Search..."
-        />
 
-        {query && (
-          <div className="absolute right-0 top-0 flex flex-row gap-1 p-2 pt-3">
-            <X size={20} color="#B4B4B8" className='' onClick={() => setQuery('')} />
-            <span className="text-[#B4B4B8] -mt-1" >|</span>
-            
-            <Search size={20} color="#B4B4B8" />
-          </div>
-        )}
-      
+          <input
+            ref={inputRef}
+            id="search-input"
+            type="text"
+            value={query}
+            onChange={handleChange}
+            className={`w-full flex gap-10 px-4 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
+            placeholder={listening ? 'Listening...' : 'Search...'}
+          />
+
+         
+
+        {(query || listening) ? (
+            <div className="absolute right-0 top-0 flex flex-row gap-1 p-2 pt-3">
+              
+              
+              
+              <X size={20} color="#B4B4B8" className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all' onClick={clearButtonClicked} />
+            </div>
+          ) : ( <div className="absolute right-0 top-0 pt-3 p-2">
+            <Mic
+              size={20}
+              color='#B4B4B8'
+              className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all'
+              onClick={SpeechRecog} // Trigger speech recognition on mic click
+            />
+          </div>)}
+
+
+
+
         </div>
+
         {error && <div className="text-sm text-red-500 mt-1">{error}</div>}
+
         {showSuggestions && (
-          <ul className="absolute max-h-[300px] top-10 overflow-y-scroll overflow-x-hidden w-[350px] mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-[1000]">
+          <ul className="absolute max-h-[300px] top-10 overflow-y-scroll overflow-x-hidden w-[350px] mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-[1000] custom-scrollbar">
             {filteredSuggestions.length > 0 ? (
               filteredSuggestions.map((suggestion, index) => (
                 <li
@@ -166,7 +229,6 @@ type HighlightedTextProps = {
   text: string;
   query: string;
 };
-
 
 const HighlightedText = ({ text, query }: HighlightedTextProps) => {
   if (!query) return <>{text}</>;

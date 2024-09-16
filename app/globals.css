@@ -35,3 +35,26 @@
     hsl(253deg 51% 9%) 100%
   );
 }
+
+
+
+/* //custom scrollbar */
+/* Custom scrollbar styles for WebKit browsers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* Light gray */
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a0aec0; /* Darker gray */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f7fafc; /* Light background */
+  border-radius: 8px;
+}
