@@ -29,19 +29,19 @@ export const Hero = () => {
       </div>
 
       {/* Navbar Logo */}
-      <div className="w-full  shadow-sm flex justify-start items-center bg-transparent ">
+      <div className="w-full  shadow-sm flex md:justify-start justify-center items-center bg-transparent ">
         {/* <h1 className="text-start text-white text-2xl font-semibold p-10">
           SecureNet
         </h1> */}
-        <div className="px-5 pl-1 -mt-8 md:px-10 md:-mt-8">
+        <div className="px-5 pl-1 md:px-10 my-4">
 
       <Image src="/eek-monk-logo.png"  alt="eek-monk"  width={180} height={180} className=""/>
         </div>
       </div>
 
       {/* Main Content Div */}
-      <div className="max-h-[400px] flex flex-col md:flex-row gap-3 w-full items-center justify-start md:justify-center h-[50vh] md:h-screen z-10   md:-mt-28 px-4 overflow-visible">
-        <div className="flex flex-col md:flex-row gap-2">
+      <div className="max-h-[400px] flex flex-col md:flex-row gap-3 w-full items-center justify-start md:justify-center h-[50vh] md:h-screen z-10  md:-mt-28 px-4 overflow-visible">
+        <div className="flex flex-col md:flex-row gap-2 ">
        <SearchBar  suggestions={customers}           onSelect={(value) => handleSelect(value)} />
         </div>
         

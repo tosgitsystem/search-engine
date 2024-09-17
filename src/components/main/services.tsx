@@ -10,7 +10,7 @@ const services = [
   { title: "Cloud Security", icon: Cloud, description: "Professionals are passionate about cyber security and have a proven track record of delivering top-notch services to businesses of all sizes." },
 ];
 
-const CyberSecurityServices = () => {
+export const CyberSecurityServices = () => {
   return (
     <section className="bg-services-gradien py-16 px-4">
       {/* <iframe
@@ -48,4 +48,4 @@ const CyberSecurityServices = () => {
   );
 };
 
-export default CyberSecurityServices;
+

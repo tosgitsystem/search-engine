@@ -58,3 +58,19 @@
   background: #f7fafc; /* Light background */
   border-radius: 8px;
 }
+
+
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+.scroll-smooth::-webkit-scrollbar {
+  display: none; /* Hides the scrollbar for WebKit-based browsers */
+}
+
+.scroll-smooth {
+  -ms-overflow-style: none; /* Hides scrollbar for Internet Explorer and Edge */
+  scrollbar-width: none; /* Hides scrollbar for Firefox */
+}
+

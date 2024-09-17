@@ -1,18 +1,11 @@
-import { Hero } from "@/src/components/hero";
-import { SecondaryServices } from "@/src/components/secondaryServices";
-import CyberSecurityServices from "@/src/components/services";
-import { Testimonials } from "@/src/components/testimonial";
+import { HomePage } from "@/src";
+
 
 
 export default function Home() {
   return (
     <div>
-<Hero/>
-<main>
-  <CyberSecurityServices/>
-  <SecondaryServices/>
-  <Testimonials/>
-</main>
+      <HomePage/>
     </div>
   );
 }

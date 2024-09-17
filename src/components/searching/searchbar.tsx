@@ -1,3 +1,4 @@
+'use client'
 import { Mic, Search, X } from 'lucide-react';
 import React, { forwardRef, useState, ChangeEvent, useEffect, useRef } from 'react';
 
@@ -10,10 +11,7 @@ type SearchBarHandle = {
   focus: () => void;
 };
 
-
-
-
-const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
+const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>( 
   ({ suggestions, onSelect }) => {
     const [query, setQuery] = useState('');
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -108,13 +106,9 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
       }
     };
 
-
-
-  
-
     // Speech-to-text logic
     const SpeechRecog = () => {
-      const SpeechRecognition = (window).SpeechRecognition || (window ).webkitSpeechRecognition;
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         setError('Speech recognition not supported in this browser');
         return;
@@ -140,29 +134,26 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
         setListening(false);
       };
 
-      recognition.onresult = (event ) => {
+      recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         setQuery(transcript); // Update the input with speech result
       };
 
-
       recognition.start();
     };
 
-
-const clearButtonClicked = () => {
-        setQuery('');
-        setFilteredSuggestions([]);
-        setShowSuggestions(false);
-        setJustSelected(false);
-        setListening(false);
-        }
-
+    const clearButtonClicked = () => {
+      setQuery('');
+      setFilteredSuggestions([]);
+      setShowSuggestions(false);
+      setJustSelected(false);
+      setListening(false);
+    };
 
     return (
-      <div className="relative  flex  justify-center items-center  w-full max-w-md mx-auto" ref={searchBarRef}>
-        <div className='relative w-[350px]  px-5 bg-white border border-gray-300 rounded-full '>
-          <div className="absolute left-0 top-0 p-2 pt-3">
+      <div className="relative flex justify-center items-center w-full max-w-5xl mx-auto" ref={searchBarRef}>
+        <div className='relative w-[90vw] md:w-[50vw] px-5 py-1 bg-white rounded-full border border-gray-300'>
+          <div className="absolute left-0 top-0 flex items-center pl-4 h-full">
             <Search size={20} color="#B4B4B8" />
           </div>
 
@@ -172,37 +163,30 @@ const clearButtonClicked = () => {
             type="text"
             value={query}
             onChange={handleChange}
-            className={`w-full flex gap-10 px-4 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
+            className={`w-full pl-12 pr-10 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
             placeholder={listening ? 'Listening...' : 'Search...'}
           />
 
-         
-
-        {(query || listening) ? (
-            <div className="absolute right-0 top-0 flex flex-row gap-1 p-2 pt-3">
-              
-              
-              
+          {(query || listening) ? (
+            <div className="absolute right-0 top-0 flex items-center pr-4 h-full">
               <X size={20} color="#B4B4B8" className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all' onClick={clearButtonClicked} />
             </div>
-          ) : ( <div className="absolute right-0 top-0 pt-3 p-2">
-            <Mic
-              size={20}
-              color='#B4B4B8'
-              className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all'
-              onClick={SpeechRecog} // Trigger speech recognition on mic click
-            />
-          </div>)}
-
-
-
-
+          ) : (
+            <div className="absolute right-0 top-0 flex items-center pr-4 h-full">
+              <Mic
+                size={20}
+                color='#B4B4B8'
+                className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all'
+                onClick={SpeechRecog} // Trigger speech recognition on mic click
+              />
+            </div>
+          )}
         </div>
 
         {error && <div className="text-sm text-red-500 mt-1">{error}</div>}
 
         {showSuggestions && (
-          <ul className="absolute max-h-[300px] top-10 overflow-y-scroll overflow-x-hidden w-[350px] mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-[1000] custom-scrollbar">
+          <ul className="absolute top-full left-0 w-full md:w-[50vw] bg-white border border-gray-300 rounded-b-lg shadow-lg z-[1000] custom-scrollbar max-h-[300px] mt-1 overflow-y-auto">
             {filteredSuggestions.length > 0 ? (
               filteredSuggestions.map((suggestion, index) => (
                 <li
