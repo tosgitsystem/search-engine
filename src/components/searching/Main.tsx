@@ -15,7 +15,7 @@ interface MainProps {
 
 export const Main: React.FC<MainProps> = ({ searchResults }) => {
   return (
-    <main className="container mx-auto px-4 py-4">
+    <main className="container mx-auto px-3 md:pr-4 md:px-0 py-4">
       <div className="flex gap-2 overflow-x-auto whitespace-nowrap scroll-smooth mb-4">
         {['Photo', 'Price', 'Brands', 'Rental', 'Open now', 'Game', 'Dealership', 'Used', 'Within 800m'].map((filter) => (
           <Button key={filter} variant="outline" size="sm" className="rounded-full">

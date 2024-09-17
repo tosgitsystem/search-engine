@@ -108,7 +108,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
 
     // Speech-to-text logic
     const SpeechRecog = () => {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition = (window).SpeechRecognition || (window).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         setError('Speech recognition not supported in this browser');
         return;
@@ -134,7 +134,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
         setListening(false);
       };
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
         setQuery(transcript); // Update the input with speech result
       };
@@ -163,7 +163,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
             type="text"
             value={query}
             onChange={handleChange}
-            className={`w-full pl-12 pr-10 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
+            className={`w-full pl-6 pr-10 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
             placeholder={listening ? 'Listening...' : 'Search...'}
           />
 
@@ -186,7 +186,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
         {error && <div className="text-sm text-red-500 mt-1">{error}</div>}
 
         {showSuggestions && (
-          <ul className="absolute top-full left-0 w-full md:w-[50vw] bg-white border border-gray-300 rounded-b-lg shadow-lg z-[1000] custom-scrollbar max-h-[300px] mt-1 overflow-y-auto">
+          <ul className="absolute top-full left-0 w-full md:w-[50vw] bg-white border border-gray-300 rounded-lg shadow-lg z-[1000] custom-scrollbar max-h-[300px] mt-1 overflow-y-auto">
             {filteredSuggestions.length > 0 ? (
               filteredSuggestions.map((suggestion, index) => (
                 <li
