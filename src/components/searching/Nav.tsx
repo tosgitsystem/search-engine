@@ -16,14 +16,14 @@ const tabs = [
 export const Nav: React.FC<NavProps> = ({ setActiveTab, activeTab }) => {
   return (
     <nav>
-      <div className="container relative mx-auto py-2 flex overflow-x-auto scroll-smooth whitespace-nowrap z-10 text-gray-300">
+      <div className="container relative mx-auto  flex overflow-x-auto scroll-smooth whitespace-nowrap z-10 text-gray-300">
         {tabs.map((item) => (
           <div
             key={item.name}
             onClick={() => setActiveTab(item.name)} // Update the active tab on click
-            className={`cursor-pointer transition-colors px-4 flex items-center space-x-1 ${
+            className={`cursor-pointer transition-colors mx-4 pb-2 flex items-center space-x-1 ${
               activeTab === item.name
-                ? 'text-red-500  underline underline-offset-8'
+                ? 'text-red-500 border-spacing-y-4 border-b-4 border-red-500'
                 : 'text-gray-300 text-sm'
             }`}
           >

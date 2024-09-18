@@ -159,7 +159,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
           type="text"
           value={query}
           onChange={handleChange}
-          className={`w-full pl-6 pr-10 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
+          className={`w-full pl-6 pr-10 py-1 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
           placeholder={listening ? 'Listening...' : 'Search...'}
         />
 

@@ -16,7 +16,11 @@ export const Header: React.FC = () => {
         
         {/* Logo and Search Bar Container */}
         <div className="flex flex-col md:flex-row items-center space-x-2  md:space-x-4 w-full md:w-auto">
-          <div className="px-5 pl-4 my-6">
+          <div className="px-5 pl-4 my-6 w-full flex  flex-row-reverse justify-between items-center">
+          <div className=" md:hidden">
+        <Settings className="h-5 w-5 text-white" />
+      </div>
+    
             <Image
               src="/eek-monk-logo.png"
               alt="eek-monk"
@@ -24,6 +28,9 @@ export const Header: React.FC = () => {
               height={180}
               className="mx-auto md:mx-0"
             />
+              <div className=" md:hidden">
+        <MoreVertical className="h-5 w-5 text-white" />
+      </div>
           </div>
           <div className="relative flex-grow md:mb-0 mb-4 md:mt-0 -mt-4" >
             <SearchBar 
