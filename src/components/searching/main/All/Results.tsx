@@ -1,6 +1,5 @@
-// src/components/Main.tsx
 import React from 'react';
-import { Button } from '../ui';
+import { Button } from '@/src/components/ui';
 
 interface SearchResult {
   title: string;
@@ -13,20 +12,12 @@ interface MainProps {
   searchResults: SearchResult[];
 }
 
-export const Main: React.FC<MainProps> = ({ searchResults }) => {
+export const Results: React.FC<MainProps> = ({ searchResults }) => {
   return (
-    <main className="container mx-auto px-3 md:pr-4 md:px-0 py-4">
-      <div className="flex gap-2 overflow-x-auto whitespace-nowrap scroll-smooth mb-4">
-        {['Photo', 'Price', 'Brands', 'Rental', 'Open now', 'Game', 'Dealership', 'Used', 'Within 800m'].map((filter) => (
-          <Button key={filter} variant="outline" size="sm" className="rounded-full">
-            {filter}
-          </Button>
-        ))}
-      </div>
-
+    <div>
       <div className="space-y-6">
         {searchResults.map((result, index) => (
-          <div key={index} className="max-w-full md:max-w-2xl bg-white">
+          <div key={index} className="max-w-full md:max-w-2xl bg-white p-4 rounded-md shadow-sm">
             <div className="text-sm text-gray-600">{result.url}</div>
             <h2 className="text-xl text-blue-700 font-medium">{result.title}</h2>
             <p className="text-sm text-gray-700">{result.description}</p>
@@ -42,6 +33,6 @@ export const Main: React.FC<MainProps> = ({ searchResults }) => {
           </div>
         ))}
       </div>
-    </main>
+    </div>
   );
 };

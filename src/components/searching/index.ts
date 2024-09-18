@@ -1,2 +1,2 @@
 export * from './Largeheader'
-export * from './Main'
+export * from './main/index'

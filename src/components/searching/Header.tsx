@@ -11,10 +11,9 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="relative h-auto">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between h-full">
+    <header className="relative  h-auto">
+      <div className="container   mx-auto flex flex-col md:flex-row items-center justify-between h-full">
         
-
         {/* Logo and Search Bar Container */}
         <div className="flex flex-col md:flex-row items-center space-x-2  md:space-x-4 w-full md:w-auto">
           <div className="px-5 pl-4 my-6">
