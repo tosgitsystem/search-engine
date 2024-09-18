@@ -30,6 +30,8 @@ export const SecondaryServices = () => {
             Discover how we can tailor these services to meet your unique needs.
           </h2>
           <p className="text-gray-400">Our specialized services provide top-level security for your business.</p>
+     
+     <a href="https://github.com/Abhishek8218/components" className="text-purple-300 font-extrabold text-base opacity-70">flipkart</a>
         </div>
 
         {/* Services Grid */}

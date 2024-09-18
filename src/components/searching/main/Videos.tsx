@@ -27,12 +27,12 @@ const VideoResult: React.FC<VideoResultProps> = ({
     <div className="mb-6">
       <div className="flex space-x-4">
         <div className="relative flex-shrink-0">
-          <img src={thumbnail} alt={title} className="w-40 h-24 object-cover rounded" />
+          <img src={thumbnail} alt={title} className=" w-36  md:w-40 h-24 object-cover rounded" />
           
         </div>
         <div className="flex-grow">
-          <h2 className="text-lg font-semibold text-blue-400 mb-1">{title}</h2>
-          <p className="text-sm text-gray-400 mb-2">{description}</p>
+          <h2 className="text-sm md:text-lg font-semibold text-blue-400 mb-1">{title}</h2>
+          <p className=" hidden md:block text-sm text-gray-400 mb-2">{description}</p>
           <div className="text-xs text-gray-500">
             {source} · {channel} · {date}
           </div>
@@ -68,7 +68,7 @@ export const Videos: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(`${API_URL}${start}&_limit=${limit}`);
-      const newVideos = response.data.map((item: any) => ({
+      const newVideos = response.data.map((item: { title: string; url: string }) => ({
         title: item.title,
         thumbnail: item.url,
         description: 'Mock description for video',
@@ -82,8 +82,12 @@ export const Videos: React.FC = () => {
       if (response.data.length < limit) {
         setHasMore(false);
       }
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     } finally {
       setLoading(false);
     }
@@ -98,7 +102,7 @@ export const Videos: React.FC = () => {
 
   return (
     <div className="mx-auto px-4 text-gray-600">
-      <div className='p-4 rounded-md border max-w-3xl border-gray-500'>
+      <div className='p-4 rounded-md border max-w-3xl border-gray-200'>
         <InfiniteScroll
           dataLength={videos.length}
           next={fetchVideos}

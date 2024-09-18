@@ -1,11 +1,13 @@
 'use client'
 
+
 import Image from "next/image";
 import React from "react";
 
 
 export const Hero = () => {
- 
+
+
   return (
     <div className="relative overflow-hidden  h-[40vh] md:min-h-[70vh] ">
       <div className="w-full flex flex-col md:flex-row justify-between items-center relative">
@@ -34,6 +36,11 @@ export const Hero = () => {
         </div>
         
       </div> */}
+         <div className="mt-24">
+   
+
+    </div>
+
     </div>
   );
 };

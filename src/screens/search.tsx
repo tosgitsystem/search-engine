@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
-import { All, Images, LargeHeader, Main, Videos } from '../components';
+import { All,  LargeHeader, Main, Videos } from '../components';
+import ImageGallery from '../components/searching/main/Images';
 
 const searchResults = [
   {
@@ -44,7 +45,7 @@ export const Search: React.FC = () => {
       case 'All':
         return <All searchResults={searchResults} />;
       case 'Images':
-        return <Images />;
+        return <ImageGallery />;
       case 'Videos':
         return <Videos />;
       default:
@@ -55,7 +56,7 @@ export const Search: React.FC = () => {
   return (
     <div className="min-h-screen min-w-screen bg-white">
       <LargeHeader setActiveTab={setActiveTab} activeTab={activeTab} />
-      <div className='md:px-56 px-2'>
+      <div className={`  ${activeTab === 'Images' ? " md:pl-56 pr-2" : " md:px-56"}`}>
         <Main renderContent={renderContent} />
       </div>
     </div>

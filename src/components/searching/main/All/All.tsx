@@ -16,7 +16,7 @@ interface AllProps {
 
 export const All: React.FC<AllProps> = ({ searchResults }) => {
   return (
-    <main className="container mx-auto px-3 md:pr-4 py-4">
+    <main className="container mx-auto px-3 md:pr-4 ">
       <div className='border border-gray-200 max-w-3xl rounded-md my-4'>
         <Results searchResults={searchResults} />
       </div>

@@ -1,5 +1,5 @@
 'use client';
-import { Mic, Search, X } from 'lucide-react';
+import { Mic, Search,  Sparkles, X } from 'lucide-react';
 import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
 
 type SearchBarProps = {
@@ -103,7 +103,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
 
   // Speech-to-text logic
   const SpeechRecog = () => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = (window).SpeechRecognition || (window ).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       setError('Speech recognition not supported in this browser');
       return;
@@ -129,7 +129,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
       setListening(false);
     };
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setQuery(transcript); // Update the input with speech result
     };
@@ -147,9 +147,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
 
   return (
     <div className="relative flex justify-center items-center w-full max-w-5xl mx-auto" ref={searchBarRef}>
-      <div className='relative w-[90vw] md:w-[50vw] px-5 py-1 bg-white rounded-lg border border-gray-300'>
+      <div className='relative w-[90vw] md:w-[50vw] px-5 py-1 bg-white rounded-full border border-gray-300'>
         <div className="absolute left-0 top-0 flex items-center pl-4 h-full">
           <Search size={20} color="#B4B4B8" />
+          
         </div>
 
         <input
@@ -167,13 +168,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
             <X size={20} color="#B4B4B8" className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all' onClick={clearButtonClicked} />
           </div>
         ) : (
-          <div className="absolute right-0 top-0 flex items-center pr-4 h-full">
+          <div className="absolute right-0 top-0 flex items-center pr-4 h-full gap-1">
             <Mic
               size={20}
               color='#B4B4B8'
               className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all'
               onClick={SpeechRecog} // Trigger speech recognition on mic click
             />
+            <Sparkles size={20} color="#B4B4B8" className="text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all" />
           </div>
         )}
       </div>
