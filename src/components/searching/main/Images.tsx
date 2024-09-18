@@ -21,7 +21,10 @@ export default function App() {
   }, [images, selectedImage]);
 
   const handleSelect = (index: number) => {
+   
     setSelectedImage(images[index]);
+   
+  
   };
 
   return (
@@ -32,7 +35,8 @@ export default function App() {
           images={images}
           enableImageSelection={true}
           onSelect={handleSelect}
-          
+
+          onClick={handleSelect}
         />
       </div>
 
