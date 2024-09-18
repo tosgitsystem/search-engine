@@ -10,7 +10,7 @@ interface LargeHeaderProps {
 
 export const LargeHeader: React.FC<LargeHeaderProps> = ({ setActiveTab, activeTab }) => {
   return (
-    <div className="relative  sm:mt-0">
+    <div className="sticky top-0  sm:mt-0">
       {/* Settings and More Vertical Icons for Small Screens */}
   
       <div className="h-auto bg-main-gradient md:block flex flex-col md:items-center md:mt-0 -mt-6">

@@ -1,6 +1,8 @@
 'use client';
+import { searchQuery, showSuggestion } from '@/src/states/atoms/queryAtom';
 import { Mic, Search,  Sparkles, X } from 'lucide-react';
-import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
+import React, { useState, ChangeEvent, useEffect, useRef} from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 type SearchBarProps = {
   suggestions: string[];
@@ -8,23 +10,26 @@ type SearchBarProps = {
 };
 
 const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
-  const [query, setQuery] = useState('');
+  const query = useRecoilValue(searchQuery);
+  const setQuery = useSetRecoilState(searchQuery);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const showSuggestions = useRecoilValue(showSuggestion);
+  const setShowSuggestions = useSetRecoilState(showSuggestion);
   const [debouncedQuery, setDebouncedQuery] = useState(query);
   const [error, setError] = useState<string | null>(null);
   const [justSelected, setJustSelected] = useState(false);
   const [listening, setListening] = useState(false);
   const [endSpeech, setEndSpeech] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true); // Add initial load flag
 
   const searchBarRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null); // Manage input focus manually
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
-        setEndSpeech(true); // Close suggestions if clicked outside
+        setEndSpeech(true);
       }
     };
 
@@ -38,6 +43,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
+      if(isInitialLoad) {
+        setShowSuggestions(false);
+        setIsInitialLoad(false);
+      }
+      console.log("debouncedQuery", debouncedQuery);
     }, 300);
     return () => {
       clearTimeout(handler);
@@ -57,10 +67,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
               suggestion.toLowerCase().includes(debouncedQuery.toLowerCase())
             )
           );
-          setTimeout(() => {
+
+          // Only show suggestions if it's not the initial load
+          if (!isInitialLoad) {
+            console.log("iniral load", isInitialLoad);
             setShowSuggestions(debouncedQuery.length > 0);
-          }, 100);
-          setError(null); // Clear error if successful
+          }
+
+          setError(null);
         } catch (e) {
           setError('500 Internal Server Error');
         }
@@ -71,11 +85,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
       setShowSuggestions(false);
       setError(null);
     }
+
+    // Set initial load to false after the first render
+    if (isInitialLoad) {
+      setIsInitialLoad(false);
+    }
   }, [debouncedQuery, suggestions, justSelected]);
 
   useEffect(() => {
     if (inputRef.current) {
-      // Remove focus from the input when the bottom sheet opens
       inputRef.current.blur();
     }
   }, []);
@@ -95,15 +113,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
     setJustSelected(true);
     onSelect(value);
 
-    // Prevent re-focusing after selection
     if (inputRef.current) {
-      inputRef.current.blur(); // Ensure the input is blurred
+      inputRef.current.blur();
     }
   };
 
-  // Speech-to-text logic
   const SpeechRecog = () => {
-    const SpeechRecognition = (window).SpeechRecognition || (window ).webkitSpeechRecognition;
+    const SpeechRecognition = (window ).SpeechRecognition || (window).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       setError('Speech recognition not supported in this browser');
       return;
@@ -131,7 +147,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      setQuery(transcript); // Update the input with speech result
+      setQuery(transcript);
     };
 
     recognition.start();
@@ -150,13 +166,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
       <div className='relative w-[90vw] md:w-[50vw] px-5 py-1 bg-white rounded-full border border-gray-300'>
         <div className="absolute left-0 top-0 flex items-center pl-4 h-full">
           <Search size={20} color="#B4B4B8" />
-          
         </div>
 
         <input
           ref={inputRef}
           id="search-input"
           type="text"
+          autoFocus={false}
           value={query}
           onChange={handleChange}
           className={`w-full pl-6 pr-10 py-1 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
@@ -173,7 +189,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
               size={20}
               color='#B4B4B8'
               className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all'
-              onClick={SpeechRecog} // Trigger speech recognition on mic click
+              onClick={SpeechRecog}
             />
             <Sparkles size={20} color="#B4B4B8" className="text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all" />
           </div>

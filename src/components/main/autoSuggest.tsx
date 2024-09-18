@@ -1,48 +1,52 @@
-'use client'
+'use client';
 import { Mic, Search, X } from 'lucide-react';
 import React, { forwardRef, useState, ChangeEvent, useEffect, useRef } from 'react';
+import classNames from 'classnames'; // Ensure the package is installed
+import { useRecoilState } from 'recoil';
+import { searchQuery, showSuggestion } from '@/src/states/atoms/queryAtom'; // Recoil atom for search query
 
 type SearchBarProps = {
   suggestions: string[];
   onSelect: (value: string) => void;
+  disabled?: boolean;
+  inputClassName?: string;
+  onSearch?: (query: string) => void; // Custom className prop for input element
 };
 
 type SearchBarHandle = {
   focus: () => void;
 };
 
-
-
-
 const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
-  ({ suggestions, onSelect }) => {
-    const [query, setQuery] = useState('');
+  ({ suggestions, onSelect, disabled, inputClassName, onSearch }) => {
+    const [query, setQuery] = useRecoilState<string>(searchQuery); // Using Recoil state with explicit type
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
-    const [showSuggestions, setShowSuggestions] = useState(false);
+    const [showSuggestions, setShowSuggestions] = useRecoilState<boolean>(showSuggestion);
     const [debouncedQuery, setDebouncedQuery] = useState(query);
     const [error, setError] = useState<string | null>(null);
     const [justSelected, setJustSelected] = useState(false);
     const [listening, setListening] = useState(false);
     const [endSpeech, setEndSpeech] = useState(false);
+   
 
     const searchBarRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null); // Manage input focus manually
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
         if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
           setShowSuggestions(false);
-          setEndSpeech(true) // Close suggestions if clicked outside
+          setEndSpeech(true);
         }
       };
-  
+
       document.addEventListener('mousedown', handleClickOutside);
-  
+
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }, []);
-   
+
     useEffect(() => {
       const handler = setTimeout(() => {
         setDebouncedQuery(query);
@@ -68,7 +72,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
             setTimeout(() => {
               setShowSuggestions(debouncedQuery.length > 0);
             }, 100);
-            setError(null); // Clear error if successful
+            setError(null);
           } catch (e) {
             setError('500 Internal Server Error');
           }
@@ -81,40 +85,30 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
       }
     }, [debouncedQuery, suggestions, justSelected]);
 
-    useEffect(() => {
-      if (inputRef.current) {
-        // Remove focus from the input when the bottom sheet opens
-        inputRef.current.blur();
-      }
-    }, []);
-
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (justSelected) {
         setJustSelected(false);
         return;
       }
-      setQuery(e.target.value);
+      setQuery(e.target.value); // Updating Recoil state
     };
 
     const handleSelect = (value: string) => {
-      setQuery(value);
+      setQuery(value); // Set selected value in Recoil state
       setFilteredSuggestions([]);
       setShowSuggestions(false);
       setJustSelected(true);
       onSelect(value);
-      
-      // Prevent re-focusing after selection
+
       if (inputRef.current) {
-        inputRef.current.blur(); // Ensure the input is blurred
+        inputRef.current.blur();
       }
     };
 
-
-
-  
-
-    // Speech-to-text logic
     const SpeechRecog = () => {
+      if (disabled) {
+        return;
+      }
       const SpeechRecognition = (window).SpeechRecognition || (window ).webkitSpeechRecognition;
       if (!SpeechRecognition) {
         setError('Speech recognition not supported in this browser');
@@ -131,38 +125,52 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
       }
 
       recognition.onstart = () => {
-        console.log("Listening...");
         setListening(true);
       };
+      recognition.onend = () => {
+        setListening(false);
+      }
+  
+      recognition.onsoundend = () => {
+        console.log("Sound ended");
+        setListening(false);
+      }
 
       recognition.onspeechend = () => {
         recognition.stop();
-        console.log("Stopped listening");
         setListening(false);
       };
 
-      recognition.onresult = (event ) => {
+      recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        setQuery(transcript); // Update the input with speech result
+        setQuery(transcript); // Update Recoil state with the speech input
       };
-
 
       recognition.start();
     };
 
+    const clearButtonClicked = () => {
+      setQuery(''); // Clear the Recoil state query
+      setFilteredSuggestions([]);
+      setShowSuggestions(false);
+      setJustSelected(false);
+      setListening(false);
+    };
 
-const clearButtonClicked = () => {
-        setQuery('');
-        setFilteredSuggestions([]);
-        setShowSuggestions(false);
-        setJustSelected(false);
-        setListening(false);
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+       setShowSuggestions(false);
+        if (query.trim()) {
+          if (onSearch) {
+            onSearch(query); // Call the search function passed from the parent
+          }
         }
-
+      }
+    };
 
     return (
-      <div className="relative  flex  justify-center items-center  w-full max-w-md mx-auto" ref={searchBarRef}>
-        <div className='relative w-[350px]  px-5 bg-white border border-gray-300 rounded-full '>
+      <div className="relative flex justify-center items-center w-full max-w-md mx-auto" ref={searchBarRef}>
+        <div className={classNames("relative w-[350px] px-5 bg-white border border-gray-300 rounded-full", inputClassName)}>
           <div className="absolute left-0 top-0 p-3 pt-3">
             <Search size={20} color="#B4B4B8" />
           </div>
@@ -171,33 +179,38 @@ const clearButtonClicked = () => {
             ref={inputRef}
             id="search-input"
             type="text"
-            value={query}
+            autoFocus={true}
+            value={query} // Bind input value to Recoil state
+            readOnly={disabled}
+            onKeyDown={handleKeyDown}
             onChange={handleChange}
-            className={`w-full flex gap-10 ml-1 px-4 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
+            className={classNames(
+              'w-full ml-1 px-4 py-2 focus:outline-none focus:border-blue-500 placeholder-gray-400',
+              { 'placeholder-blue-500': listening },
+              inputClassName // Ensure custom classes will override default ones
+            )}
             placeholder={listening ? 'Listening...' : 'Search...'}
           />
 
-         
-
-        {(query || listening) ? (
+          {(query || listening) ? (
             <div className="absolute right-0 top-0 flex flex-row gap-1 p-2 pt-3">
-              
-              
-              
-              <X size={20} color="#B4B4B8" className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all' onClick={clearButtonClicked} />
+              <X
+                size={20}
+                color="#B4B4B8"
+                className="text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all"
+                onClick={clearButtonClicked}
+              />
             </div>
-          ) : ( <div className="absolute right-0 top-0 pt-3 p-4">
-            <Mic
-              size={20}
-              color='#B4B4B8'
-              className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all'
-              onClick={SpeechRecog} // Trigger speech recognition on mic click
-            />
-          </div>)}
-
-
-
-
+          ) : (
+            <div className="absolute right-0 top-0 pt-3 p-4">
+              <Mic
+                size={20}
+                color="#B4B4B8"
+                className="text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all"
+                onClick={SpeechRecog}
+              />
+            </div>
+          )}
         </div>
 
         {error && <div className="text-sm text-red-500 mt-1">{error}</div>}

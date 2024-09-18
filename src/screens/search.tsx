@@ -56,7 +56,7 @@ export const Search: React.FC = () => {
   return (
     <div className="min-h-screen min-w-screen bg-white">
       <LargeHeader setActiveTab={setActiveTab} activeTab={activeTab} />
-      <div className={`  ${activeTab === 'Images' ? " md:pl-56 pr-2" : " md:px-56"}`}>
+      <div className={` mt-2  ${activeTab === 'Images' ? " md:pl-56 pr-2" : " md:px-56"}`}>
         <Main renderContent={renderContent} />
       </div>
     </div>

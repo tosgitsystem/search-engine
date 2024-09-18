@@ -5,7 +5,14 @@ import { MoreVertical, Settings } from "lucide-react";
 import SearchBar from "./searchbar"; // Import the new SearchBar component
 
 export const Header: React.FC = () => {
-  const suggestions = ['Example 1', 'Example 2', 'Example 3']; // Replace with actual suggestions
+  const customers = [
+    'Adam', 'Bella', 'Charlie', 'David', 'Fiona', 'George', 'Kelly',
+    'Samantha', 'Harry', 'Olivia', 'Isabella', 'Mason', 'Sophia', 'James', 
+    'Ava', 'Liam', 'Ethan', 'Noah', 'Emma', 'Michael', 'Lucas', 'Amelia',
+    'Alexander', 'Mia', 'Benjamin', 'Charlotte', 'Jack', 'Lily', 'Daniel',
+    'Ella', 'Henry', 'Grace', 'Matthew', 'Zoe', 'Owen', 'Scarlett', 
+    'Ryan', 'Hazel', 'Gabriel', 'Aria', 'William', 'Chloe', 'Sebastian'
+  ];
   const handleSelect = (value: string) => {
     console.log('Selected:', value);
   };
@@ -34,7 +41,7 @@ export const Header: React.FC = () => {
           </div>
           <div className="relative flex-grow md:mb-0 mb-4 md:mt-0 -mt-4" >
             <SearchBar 
-              suggestions={suggestions}
+              suggestions={customers}
               onSelect={handleSelect}
             />
           </div>
