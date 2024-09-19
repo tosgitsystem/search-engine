@@ -15,8 +15,8 @@ const tabs = [
 
 export const Nav: React.FC<NavProps> = ({ setActiveTab, activeTab }) => {
   return (
-    <nav>
-      <div className="container relative mx-auto  flex overflow-x-auto scroll-smooth whitespace-nowrap z-10 text-gray-300">
+    <nav className=''>
+      <div className="container  mx-auto  flex overflow-x-auto scroll-smooth whitespace-nowrap z-10 text-gray-300">
         {tabs.map((item) => (
           <div
             key={item.name}

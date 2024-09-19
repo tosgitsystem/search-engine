@@ -1,14 +1,15 @@
 // FullPageSearch.tsx
 "use client";
 import React, { useEffect } from "react";
-import SearchBar from "../main/autoSuggest";
+
 import { useRouter } from "next/navigation";
 import { useModal } from "@/src/hooks/useModal";
+import { FullPageSearchBar } from "./fullPageSearchBar";
 
 interface FullPageSearchProps {
   suggestions: string[];
   onSelect: (value: string) => void;
-  isOpen: boolean;
+  isOpen: boolean
 }
 
 const FullPageSearch: React.FC<FullPageSearchProps> = ({
@@ -49,7 +50,7 @@ const FullPageSearch: React.FC<FullPageSearchProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient  z-50 flex flex-col pt-2">
+    <div className="fixed inset-0 bg-gradient  z-50 flex flex-col ">
        <div className="w-full flex flex-col md:flex-row justify-between items-center relative">
         {/* Brick pattern */}
         <div className="overflow-x-hidden  absolute -top-16 bg-[url(/brick-pattern.png)] bg-no-repeat bg-contain bg-top opacity-10 w-1/2 min-h-screen md:flex flex-col justify-center items-center z-0 pointer-events-none" />
@@ -58,7 +59,7 @@ const FullPageSearch: React.FC<FullPageSearchProps> = ({
         <div className="overflow-x-hidden absolute md:-top-20 md:-right-80 min-h-[50vh] bg-contain bg-[url(/world.svg)] self-end bg-no-repeat bg-right opacity-20 md:opacity-30 w-[70%] h-[80%] md:w-[60%] md:h-[80%] md:min-h-screen flex flex-col justify-center items-center z-0 pointer-events-none" />
       </div>
       <div className="flex flex-col items-center">
-        <SearchBar
+        <FullPageSearchBar
           suggestions={suggestions}
           onSelect={onSelect}
           onSearch={fetchResultsAndNavigate}

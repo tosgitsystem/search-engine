@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { All,  LargeHeader, Main, Videos } from '../components';
-import ImageGallery from '../components/searching/main/Images';
+import ImageGallery from '../components/searching/main/imageGallery/Images';
 
 const searchResults = [
   {

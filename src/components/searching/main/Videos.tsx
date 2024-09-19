@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Loader2 } from 'lucide-react';
 
 // Define the type for video data
 interface VideoResultProps {
@@ -97,7 +98,7 @@ export const Videos: React.FC = () => {
     fetchVideos();
   }, []);
 
-  if (loading && videos.length === 0) return <div>Loading...</div>;
+  if (loading && videos.length === 0) return <div><Loader2 className='animate-spin absolute top-1/2 left-1/2'/></div>;
   if (error) return <div>Error: {error}</div>;
 
   return (

@@ -5,6 +5,7 @@ import QueryProvider from "./QueryProvider";
 import RecoilContextProvider from "./RecoilProvider";
 
 import { LucideLoader2 } from "lucide-react";
+import { UserAgentProvider } from "./UserAgentProvider";
 
 export const Providers = ({children}: {children:  React.ReactNode})=> {
   return (
@@ -12,8 +13,10 @@ export const Providers = ({children}: {children:  React.ReactNode})=> {
 
     <QueryProvider>
       <RecoilContextProvider>
+        <UserAgentProvider>
     
         {children}
+        </UserAgentProvider>
       </RecoilContextProvider>
     </QueryProvider>
  

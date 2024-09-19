@@ -9,8 +9,8 @@ export const modalStackState = atom<string[]>({
   default: [],
 });
 
-export const sheetState = atom<boolean>({
-  key: 'sheetState',
+export const modalState = atom<boolean>({
+  key: 'modalState',
   default: false,
 });
 
@@ -18,9 +18,10 @@ export const sheetState = atom<boolean>({
 
 export const useModal = () => {
   const [modalStack, setModalStack] = useRecoilState(modalStackState);
-  const [sheetOpen, setSheetOpen] = useRecoilState(sheetState);
+  const [modalOpen, setModalOpen] = useRecoilState(modalState);
 
   const openModal = useCallback((modalId: string) => {
+    setModalOpen(true);
     console.log('openModal');
  
     setModalStack((prevStack) => [...prevStack, modalId]);
@@ -34,7 +35,7 @@ export const useModal = () => {
   //function to close the modal
   const closeModal = useCallback(() => {
     console.log('closeModal');
-    setSheetOpen(false); // Pass an array of booleans
+    setModalOpen(false); // Pass an array of booleans
     setModalStack((prevStack) => {
       const newStack = [...prevStack];
       newStack.pop(); // Remove the top modal
@@ -53,7 +54,10 @@ export const useModal = () => {
         }
         return newStack;
       });
+      setModalOpen(false);
+      console.log('handlePopstate clicked' );
     } else {
+      console.log('handlePopstate ' );
       // If no modalId is present, close all modals (typically this happens when the user navigates back to the root state)
       setModalStack([]);
     }
@@ -70,6 +74,6 @@ export const useModal = () => {
     openModal,
     closeModal,
     modalStack,
-    sheetOpen
+    modalOpen
   };
 };
