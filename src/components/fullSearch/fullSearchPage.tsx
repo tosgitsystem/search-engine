@@ -18,7 +18,7 @@ const FullPageSearch: React.FC<FullPageSearchProps> = ({
   onSelect,
 }) => {
   const router = useRouter();
-  const {closeModal} = useModal();
+  
 
   useEffect(() => {
     if (isOpen) {
@@ -45,7 +45,7 @@ const FullPageSearch: React.FC<FullPageSearchProps> = ({
       console.log("Fake API call successful.");
       // Navigate to the search results page after the delay
       router.push(`/search/${query}`);
-      closeModal();
+     
     },200);
   };
 

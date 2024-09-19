@@ -1,7 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { All,  LargeHeader, Main, Videos } from '../components';
 import ImageGallery from '../components/searching/main/imageGallery/Images';
+import { useModal } from '../hooks/useModal';
 
 const searchResults = [
   {
@@ -39,6 +40,10 @@ const searchResults = [
 
 export const Search: React.FC = () => {
   const [activeTab, setActiveTab] = useState('All');
+  const {closeModal} = useModal();
+  useEffect(() => {
+closeModal();
+  }, []);
 
   const renderContent = () => {
     switch (activeTab) {
