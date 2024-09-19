@@ -29,6 +29,7 @@ useEffect(() => {
   console.log("modalopen in effect", !modalOpen)
   console.log("modalstack in effect 2", modalOpen)
   {!modalOpen && setSelectedImage(null)}
+  
 },[modalStack,modalOpen])
 
 // Set default selected image on large screens

@@ -57,6 +57,7 @@ export const useModal = () => {
       setModalOpen(false);
       console.log('handlePopstate clicked' );
     } else {
+      setModalOpen(false);
       console.log('handlePopstate ' );
       // If no modalId is present, close all modals (typically this happens when the user navigates back to the root state)
       setModalStack([]);
