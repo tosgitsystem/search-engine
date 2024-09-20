@@ -64,7 +64,7 @@ closeModal();
   return (
     <div className="min-h-screen min-w-screen bg-white">
       <LargeHeader setActiveTab={setActiveTab} activeTab={activeTab} />
-      <div className={` mt-2  ${activeTab === 'Images' ? " md:pl-56 pr-2" : " md:px-56"}`}>
+      <div className={` mt-2  ${activeTab === 'Images' ? " md:pl-56 pr-2" : "md:pl-[14rem] md:pr-[18rem]   lg:pl-[14rem] lg:pr-[20rem] xl:pr-[29rem]"}`}>
         <Main renderContent={renderContent} />
       </div>
     </div>

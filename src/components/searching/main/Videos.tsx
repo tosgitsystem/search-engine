@@ -103,7 +103,7 @@ export const Videos: React.FC = () => {
 
   return (
     <div className="mx-auto px-4 text-gray-600">
-      <div className='p-4 rounded-md border max-w-3xl border-gray-200'>
+      <div className='p-4 rounded-2xl border max-w-3xl border-gray-200'>
         <InfiniteScroll
           dataLength={videos.length}
           next={fetchVideos}

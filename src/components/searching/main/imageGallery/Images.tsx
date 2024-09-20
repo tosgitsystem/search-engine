@@ -95,7 +95,7 @@ console.log("modalopen", !modalOpen)
 
       {/* Selected image details */}
       {!isMobile && selectedImage && (
-        <div className={`lg:w-1/3 max-h-[1000px] w-full ${selectedImage ? 'block' : 'hidden'} lg:block p-4 border-l border-b`}>
+        <div className={`lg:w-[37.33333%] max-h-[1000px] w-full ${selectedImage ? 'block' : 'hidden'} lg:block p-4 border-l border-b`}>
           <div className="bg-white   ">
             <h2 className="text-lg font-bold mb-4">Selected Image Info</h2>
             <img

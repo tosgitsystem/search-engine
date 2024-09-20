@@ -82,7 +82,7 @@ const articles = [
 
 export const News = () =>  {
   return (
-    <div className="max-w-2xl py-4 md:pr-4 border rounded-md">
+    <div className=" py-4 md:pr-4 border rounded-2xl">
       {articles.map((article, index) => (
         <div
           key={index}

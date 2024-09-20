@@ -21,7 +21,7 @@ const isMobile = useRecoilValue(IsMobile);
         <div>
           <Header />
         </div>
-        <div className="md:px-56  lg:px-56 pt-4 -mt-2 md:-mt-2 relative z-20 ">
+        <div className="md:pl-[14rem] md:pr-[16rem]  lg:pl-[14rem] lg:pr-[20rem] xl:pr-[29rem] 2xl:pr-[36rem] pt-4 -mt-2 md:-mt-2 relative z-20 ">
           <Nav setActiveTab={setActiveTab} activeTab={activeTab} /> {/* Pass activeTab here */}
         </div>
       </div>
