@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 
 import { useRouter } from "next/navigation";
-import { useModal } from "@/src/hooks/useModal";
+
 import { FullPageSearchBar } from "./fullPageSearchBar";
 
 interface FullPageSearchProps {
