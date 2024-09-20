@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.bg-main-gradient{
+.bg-main-gradient {
   background-image: linear-gradient(
     125deg,
     hsl(254deg 60% 7%) 0%,
@@ -19,8 +19,7 @@
   );
 }
 
-
-.bg-gradient{
+.bg-gradient {
   background-image: linear-gradient(
     180deg,
     hsl(248deg 61% 12%) 0%,
@@ -35,8 +34,6 @@
     hsl(253deg 51% 9%) 100%
   );
 }
-
-
 
 /* //custom scrollbar */
 /* Custom scrollbar styles for WebKit browsers */
@@ -59,8 +56,6 @@
   border-radius: 8px;
 }
 
-
-
 .scroll-smooth {
   scroll-behavior: smooth;
 }
@@ -74,3 +69,30 @@
   scrollbar-width: none; /* Hides scrollbar for Firefox */
 }
 
+.ReactGridGallery_tile-description {
+  margin-top: 20px !important;
+  font-size: 14px;
+  color: #3f4e55;
+  font-weight: 500;
+  overflow-x: hidden !important;
+  max-width: 120px;
+  text-wrap: nowrap;
+}
+.ReactGridGallery_tile-bottom-bar {
+  bottom: 18px !important;
+  padding-left: 0px !important;
+  font-size: 12px;
+
+  font-weight: 700;
+}
+.ReactGridGallery_tile-bottom-bar > div,
+span {
+  margin-left: 0px !important;
+  color: #9599a9 !important;
+}
+.ReactGridGallery_tile {
+  background: white !important;
+}
+.ReactGridGallery_tile-viewport {
+  border-radius: 10px !important;
+}

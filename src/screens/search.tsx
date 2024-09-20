@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { All,  LargeHeader, Main, Videos } from '../components';
 import ImageGallery from '../components/searching/main/imageGallery/Images';
 import { useModal } from '../hooks/useModal';
+import { News } from '../components/searching/main/news/news';
 
 const searchResults = [
   {
@@ -51,6 +52,8 @@ closeModal();
         return <All searchResults={searchResults} />;
       case 'Images':
         return <ImageGallery />;
+        case 'News':
+          return <News />;
       case 'Videos':
         return <Videos />;
       default:

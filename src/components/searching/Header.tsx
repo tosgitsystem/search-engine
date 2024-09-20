@@ -44,22 +44,20 @@ export const Header: React.FC = () => {
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between h-full">
         
         {/* Logo and Search Bar Container */}
-        <div className="flex flex-col md:flex-row items-center space-x-2 md:space-x-4 w-full md:w-auto">
-          <div className="px-5 pl-4 my-6 w-full flex flex-row-reverse justify-between items-center">
+        <div className="flex flex-col md:flex-row items-center space-x-2 gap-y-3 md:space-x-4 w-full md:w-auto">
+          <div className="px-5 pl-4 mt-8 md:mt-4 mb-3 w-full flex flex-row-reverse justify-between items-center">
             <div className="md:hidden">
-              <Settings className="h-5 w-5 text-white" />
+              <Settings className="h-5 w-5 " />
             </div>
     
             <Image
-              src="/eek-monk-logo.png"
+              src="/eek-monk-logo_black.png"
               alt="eek-monk"
-              width={180}
-              height={180}
+              width={isMobile ? 120 : 150}
+              height={isMobile ? 120 : 150}
               className="mx-auto md:mx-0"
             />
-            <div className="md:hidden">
-              <MoreVertical className="h-5 w-5 text-white" />
-            </div>
+          
           </div>
 
           {/* Regular SearchBar */}
@@ -79,7 +77,7 @@ export const Header: React.FC = () => {
 
       {/* Fixed Search Bar */}
       {isMobile && showFixedSearchBar && (
-        <div className="fixed top-0 left-0 right-0 bg-gradient z-50 shadow-md p-4">
+        <div className="fixed top-0 left-0 right-0 bg-white z-50 border-b   p-4 pb-2">
           <div className="container mx-auto">
             <SearchBar 
               suggestions={customers}

@@ -163,9 +163,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
 
   return (
     <div className="relative flex justify-center items-center w-full max-w-5xl mx-auto" ref={searchBarRef}>
-      <div className='relative w-[90vw] md:w-[50vw] px-5 py-1 bg-white rounded-full border border-gray-300'>
+      <div className='relative w-[90vw] md:w-[50vw] px-5 py-1 bg-white rounded-full shadow-md  shadow-gray-'>
         <div className="absolute left-0 top-0 flex items-center pl-4 h-full">
-          <Search size={20} color="#B4B4B8" />
+          <Search size={20} color="#f51d1d" />
         </div>
 
         <input
@@ -175,7 +175,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
           autoFocus={false}
           value={query}
           onChange={handleChange}
-          className={`w-full pl-6 pr-10 py-1 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-400'}`}
+          className={`w-full pl-6 pr-10 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-050'}`}
           placeholder={listening ? 'Listening...' : 'Search...'}
         />
 
@@ -187,11 +187,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
           <div className="absolute right-0 top-0 flex items-center pr-4 h-full gap-1">
             <Mic
               size={20}
-              color='#B4B4B8'
+              color='#f51d1d'
               className='text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all'
               onClick={SpeechRecog}
             />
-            <Sparkles size={20} color="#B4B4B8" className="text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all" />
+            <Sparkles size={20} color="#f51d1d" className="text-[#B4B4B8] hover:cursor-pointer hover:scale-125 hover:font-bold ease-in-out transition-all" />
           </div>
         )}
       </div>

@@ -14,14 +14,14 @@ export const LargeHeader: React.FC<LargeHeaderProps> = ({ setActiveTab, activeTa
 const isMobile = useRecoilValue(IsMobile);
 
   return (
-    <div className={`sm:mt-0  ${isMobile  ? "relative" : "sticky top-0" }`}>
+    <div className={`sm:mt-0 bg-white border-b ${isMobile  ? "relative" : "sticky top-0" }`}>
       {/* Settings and More Vertical Icons for Small Screens */}
   
-      <div className="h-auto bg-main-gradient md:block flex flex-col md:items-center md:mt-0 -mt-6">
+      <div className="h-auto  md:block flex flex-col md:items-center md:mt-0 -mt-6">
         <div>
           <Header />
         </div>
-        <div className="md:px-56 lg:px-56 pt-4 -mt-5 md:-mt-10 relative z-20">
+        <div className="md:px-56  lg:px-56 pt-4 -mt-2 md:-mt-2 relative z-20 ">
           <Nav setActiveTab={setActiveTab} activeTab={activeTab} /> {/* Pass activeTab here */}
         </div>
       </div>

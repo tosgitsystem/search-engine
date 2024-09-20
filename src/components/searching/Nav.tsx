@@ -16,19 +16,23 @@ const tabs = [
 export const Nav: React.FC<NavProps> = ({ setActiveTab, activeTab }) => {
   return (
     <nav className=''>
-      <div className="container  mx-auto  flex overflow-x-auto scroll-smooth whitespace-nowrap z-10 text-gray-300">
+      <div className="container  mx-auto  flex overflow-x-auto gap-x-2 scroll-smooth whitespace-nowrap z-10 text-gray-300 border-b">
         {tabs.map((item) => (
           <div
             key={item.name}
             onClick={() => setActiveTab(item.name)} // Update the active tab on click
             className={`cursor-pointer transition-colors mx-4 pb-2 flex items-center space-x-1 ${
               activeTab === item.name
-                ? 'text-red-500 border-spacing-y-4 border-b-4 border-red-500'
-                : 'text-gray-300 text-sm'
+                ? 'text-red-500 border-spacing-y-4 border-b-4 border-red-500 rounded-sm'
+                : 'text-gray-800 text-sm '
             }`}
           >
             {item.icon}
-            <span className="text-sm">{item.name}</span>
+            <div className={`text-sm ${
+              activeTab === item.name
+                ? 'text-red-500 ml-2 '
+                : 'text-gray-800 '
+            }`}>{item.name}</div>
             
           </div>
         ))}

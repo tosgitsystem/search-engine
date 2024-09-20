@@ -184,7 +184,7 @@ console.log("clear button clicked")
           inputClassName
         )}
       >
-        <div className="absolute left-0 top-0 p-3 pt-3 ">
+        <div className="absolute left-0 top-0 p-3 pt-4 ">
           <ArrowLeft size={20} color="#B4B4B8" onClick={closeModal} />
         </div>
 
@@ -198,7 +198,7 @@ console.log("clear button clicked")
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           className={classNames(
-            "w-full ml-1 px-4 py-2 bg-transparent focus:outline-none text-white focus:border-blue-500 placeholder-gray-400 text-base",
+            "w-full ml-3 px-4 py-3 bg-transparent focus:outline-none text-white focus:border-blue-500 placeholder-gray-400 text-lg",
             { "placeholder-blue-500": listening },
             inputClassName // Ensure custom classes will override default ones
           )}

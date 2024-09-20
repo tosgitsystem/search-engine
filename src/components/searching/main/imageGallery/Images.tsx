@@ -81,6 +81,10 @@ console.log("modalopen", !modalOpen)
       images={images}
       enableImageSelection={true}
       onSelect={handleSelect}
+      tagStyle={{ backgroundColor: "rgba(0, 0, 0, 0)", color: "black" , marginBottom:10}}
+
+
+      
 
       onClick={handleSelect}
     />
