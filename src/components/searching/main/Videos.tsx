@@ -28,7 +28,7 @@ const VideoResult: React.FC<VideoResultProps> = ({
     <div className="mb-6">
       <div className="flex space-x-4">
         <div className="relative flex-shrink-0">
-          <img src={thumbnail} alt={title} className=" w-36  md:w-40 h-24 object-cover rounded" />
+          <img src={thumbnail} alt={title} className=" w-36 md:w-40 h-24 object-cover rounded" />
           
         </div>
         <div className="flex-grow">
@@ -103,7 +103,7 @@ export const Videos: React.FC = () => {
 
   return (
     <div className="mx-auto px-4 text-gray-600">
-      <div className='p-4 rounded-2xl border max-w-3xl border-gray-200'>
+      <div className='p-4 rounded-2xl border max-w-3xl border-gray-200 z-0'>
         <InfiniteScroll
           dataLength={videos.length}
           next={fetchVideos}
