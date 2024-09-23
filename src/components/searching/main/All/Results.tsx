@@ -18,8 +18,8 @@ export const Results: React.FC<MainProps> = ({ searchResults }) => {
       <div className="space-y-6">
         {searchResults.map((result, index) => (
           <div key={index} className="max-w-full md:max-w-2xl bg-white p-4  rounded-2xl shadow-sm">
-            <div className="text-sm text-gray-600">{result.url}</div>
-            <h2 className="text-lg text-[#4A0A84] font-[1400]">{result.title}</h2>
+            <div className="text-sm text-[#21784A]">{result.url}</div>
+            <h2 className="text-lg text-[#7119C0] font-[1400]">{result.title}</h2>
             <p className="text-sm text-gray-700">{result.description}</p>
             {result.tags && (
               <div className="flex flex-wrap gap-2 mt-2">

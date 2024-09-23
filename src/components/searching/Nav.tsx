@@ -16,7 +16,7 @@ const tabs = [
 export const Nav: React.FC<NavProps> = ({ setActiveTab, activeTab }) => {
   return (
     <nav className=''>
-      <div className="relative container  mx-auto  flex overflow-x-auto gap-x-2 scroll-smooth whitespace-nowrap z-10 text-gray-300 border-b">
+      <div className="relative container  mx-auto  flex overflow-x-auto  scroll-smooth whitespace-nowrap z-10 text-gray-300 border-b">
       
       
         {tabs.map((item) => (
@@ -38,7 +38,7 @@ export const Nav: React.FC<NavProps> = ({ setActiveTab, activeTab }) => {
             
           </div>
         ))}
-        <Settings2 className=' absolute right-0 top-1 h-5 w-5' color='#4A0A84'/>
+        <Settings2 className=' absolute md:right-0 right-5 top-1 h-5 w-5' color='#4A0A84'/>
       </div>
     </nav>
   );
