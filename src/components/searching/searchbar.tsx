@@ -7,9 +7,10 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 type SearchBarProps = {
   suggestions: string[];
   onSelect: (value: string) => void;
+  onInputChange?: (value: string) => void;
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChange }) => {
   const query = useRecoilValue(searchQuery);
   const setQuery = useSetRecoilState(searchQuery);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -69,10 +70,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
           );
 
           // Only show suggestions if it's not the initial load
-          if (!isInitialLoad) {
-            console.log("iniral load", isInitialLoad);
-            setShowSuggestions(debouncedQuery.length > 0);
-          }
+         
 
           setError(null);
         } catch (e) {
@@ -98,11 +96,19 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
     }
   }, []);
 
+const handleSearchBarClick = () => {
+  if (!isInitialLoad) {
+    console.log("", isInitialLoad);
+    setShowSuggestions(debouncedQuery.length > 0);
+  }
+}
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (justSelected) {
       setJustSelected(false);
       return;
     }
+    onInputChange
     setQuery(e.target.value);
   };
 
@@ -174,6 +180,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
           type="text"
           autoFocus={false}
           value={query}
+          onClick={handleSearchBarClick}
           onChange={handleChange}
           className={`w-full pl-6 pr-10 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-050'}`}
           placeholder={listening ? 'Listening...' : 'Search...'}
@@ -205,7 +212,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect }) => {
               <li
                 key={index}
                 className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSelect(suggestion)}
+                onMouseDown={() => handleSelect(suggestion)}
               >
                 <HighlightedText text={suggestion} query={query} />
               </li>

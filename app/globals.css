@@ -70,7 +70,7 @@
 }
 
 .ReactGridGallery_tile-description {
-  margin-top: 20px !important;
+  margin-top: 30px !important;
   font-size: 14px;
     color: #3f4e55;
   padding-left: 4px !important;
@@ -79,9 +79,12 @@
   max-width: 120px;
   text-wrap: nowrap;
 }
-.ReactGridGallery_tile-bottom-bar {
+.ReactGridGallery_tile-bottom-bar,.ReactGridGallery_tile-bottom-bar >div > span {
+  -webkit-line-clamp: 1;
+  line-clamp: 3;
   bottom: 14px !important;
   padding-left: 4px !important;
+margin-bottom: 0 !important;
   font-size: 12px;
 
   font-weight: 400;
@@ -90,9 +93,19 @@
 
 
 
+
+
+
 .ReactGridGallery_tile-bottom-bar > div,
 span {
+  display: -webkit-box; /* For Safari */
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1; 
+  line-clamp: 1;/* Number of lines to show */
+  overflow: hidden;
+  text-overflow: ellipsis;
   margin-left: 0px !important;
+
   color: #9599a9 !important;
 }
 .ReactGridGallery_tile {

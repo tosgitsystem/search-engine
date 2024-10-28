@@ -15,6 +15,7 @@ import { useModal } from "@/src/hooks/useModal";
 
 type FullPageSearchBarProps = {
   suggestions: string[];
+  onInputChange?: (value: string) => void;
   onSelect: (value: string) => void;
  
   inputClassName?: string;
@@ -28,7 +29,7 @@ type SearchBarHandle = {
 export const FullPageSearchBar = forwardRef<
   SearchBarHandle,
   FullPageSearchBarProps
->(({ suggestions, onSelect, inputClassName, onSearch }) => {
+>(({ suggestions, onSelect, inputClassName, onSearch, onInputChange }) => {
 const query = useRecoilValue(searchQuery)
 console.log("query", query)
 const setQuery = useSetRecoilState(searchQuery)
@@ -93,15 +94,17 @@ const setQuery = useSetRecoilState(searchQuery)
       setJustSelected(false);
       return;
     }
+    onInputChange && onInputChange(e.target.value);
     setQuery(e.target.value); // Updating Recoil state
   };
 
   const handleSelect = (value: string) => {
-    console.log("handle slect");
+    console.log("handle select clicked");
     setQuery(value); // Set selected value in Recoil state
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setJustSelected(true);
+    
     onSelect(value);
 
     if (inputRef.current) {
@@ -237,7 +240,11 @@ console.log("clear button clicked")
               <li
                 key={index}
                 className="relative px-4 py-3 text-white cursor-pointer hover:bg-gray-100 z-[101]"
-                onClick={() => (handleSelect(suggestion))}
+                onMouseDown={() => {
+
+                  console.log("clicked")
+             
+                  handleSelect(suggestion)}}
               >
                 <div
                   className="w-full flex flex-row justify-between items-center"

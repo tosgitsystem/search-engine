@@ -14,7 +14,7 @@ export const LargeHeader: React.FC<LargeHeaderProps> = ({ setActiveTab, activeTa
 const isMobile = useRecoilValue(IsMobile);
 
   return (
-    <div className={`sm:mt-0 bg-white border-b ${isMobile  ? "relative" : "sticky top-0" }`}>
+    <div className={`sm:mt-0 bg-white border-b ${isMobile  ? "relative" : "sticky top-0" } z-50`}>
       {/* Settings and More Vertical Icons for Small Screens */}
   
       <div className="h-auto  md:block flex flex-col md:items-center md:mt-0 -mt-6">

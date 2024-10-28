@@ -1,32 +1,71 @@
 import React from 'react';
-import { Button } from '@/src/components/ui';
 
-interface SearchResult {
-  title: string;
-  url: string;
-  description: string;
-  tags?: string[];
+interface OrganicResult {
+  title?: string;
+  link?: string;
+  snippet?: string;
+  snippetHighlighted?: string[]; // Array of words/phrases to highlight
+  sitelinks?: {
+    title?: string;
+    link?: string;
+  }[];
+  position?: number;
+  date?: string; // Optional
+  attributes?: { [key: string]: string }; // Optional
 }
 
-interface MainProps {
-  searchResults: SearchResult[];
+interface ResultsProps {
+  organicResults?: OrganicResult[];
 }
 
-export const Results: React.FC<MainProps> = ({ searchResults }) => {
+export const Results: React.FC<ResultsProps> = ({ organicResults }) => {
+  const highlightText = (text: string, highlights: string[] | undefined) => {
+    if (!highlights || highlights.length === 0) return text;
+
+    // Create a regex from the highlighted terms to match within the snippet
+    const regex = new RegExp(`(${highlights.join('|')})`, 'gi');
+    const parts = text.split(regex);
+
+    // Return text where matched words are wrapped in a highlight span
+    return parts.map((part, i) =>
+      highlights.includes(part.toLowerCase()) ? (
+        <span key={i} className="bg-yellow-200 font-semibold">{part}</span>
+      ) : (
+        part
+      )
+    );
+  };
+
   return (
     <div>
       <div className="space-y-6">
-        {searchResults.map((result, index) => (
-          <div key={index} className="max-w-full md:max-w-2xl bg-white p-4  rounded-2xl shadow-sm">
-            <div className="text-sm text-gray-600">{result.url}</div>
-            <h2 className="text-lg text-[#4A0A84] font-[1400]">{result.title}</h2>
-            <p className="text-sm text-gray-700">{result.description}</p>
-            {result.tags && (
+        {organicResults?.map((result, index) => (
+          <div
+            key={index}
+            className="max-w-full md:max-w-2xl bg-white p-4 rounded-2xl shadow-sm"
+          >
+            {result.link && (
+              <div className="text-sm text-gray-600">{result.link}</div>
+            )}
+            <a
+              href={result.link}
+              className="text-lg text-[#4A0A84] font-[1400] cursor-pointer"
+            >
+              {result.title}=
+            </a>
+            <p className="text-sm text-gray-700">
+              {highlightText(result.snippet || '', result.snippetHighlighted)}
+            </p>
+            {result.sitelinks && result.sitelinks.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {result.tags.map((tag) => (
-                  <Button key={tag} variant="ghost" size="sm" className="text-blue-600 p-0 h-auto">
-                    {tag}
-                  </Button>
+                {result.sitelinks.map((sitelink, index) => (
+                  <a
+                    key={index}
+                    href={sitelink.link}
+                    className="px-4 py-1.5 bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100 cursor-pointer"
+                  >
+                    {sitelink.title}
+                  </a>
                 ))}
               </div>
             )}

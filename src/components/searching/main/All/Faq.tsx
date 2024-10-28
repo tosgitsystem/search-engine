@@ -1,9 +1,19 @@
 "use client";
-import { faqData, FAQItem } from "@/data/faq";
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react"; // Import the icons
+import { ChevronDown, ChevronUp } from "lucide-react";
 
-export const RelatedFAQSection: React.FC = () => {
+interface Question {
+  question?: string;
+  snippet?: string;
+  title?: string;
+  link?: string;
+}
+
+interface RelatedFAQSectionProps {
+  questions?: Question[]; // Accepting questions as props
+}
+
+export const RelatedFAQSection: React.FC<RelatedFAQSectionProps> = ({ questions }) => {
   const [activeId, setActiveId] = useState<number | null>(null);
 
   const handleToggle = (id: number) => {
@@ -19,29 +29,34 @@ export const RelatedFAQSection: React.FC = () => {
           </div>
           <div className="mt-2">
             <ul className="list-none w-full">
-              {faqData.map((item: FAQItem) => (
+              {questions?.map((item, index) => (
                 <li
-                  key={item.id}
+                  key={index}
                   className="w-full border-b border-gray-200 last:border-none"
                 >
                   <div
                     className={`flex justify-between items-start py-3 cursor-pointer transition duration-300 ease-in-out`}
-                    onClick={() => handleToggle(item.id)}
+                    onClick={() => handleToggle(index)}
                   >
                     <div className="text-lg w-full">
                       {item.question}
                     </div>
                     <span className="text-lg text-gray-400 rounded-lg">
-                      {activeId === item.id ? <ChevronUp /> : <ChevronDown />} {/* Use arrow icons here */}
+                      {activeId === index ? <ChevronUp /> : <ChevronDown />}
                     </span>
                   </div>
                   <div
                     className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
-                      activeId === item.id ? "max-h-48" : "max-h-0"
+                      activeId === index ? "max-h-48" : "max-h-0"
                     }`}
                   >
                     <div className="text-md text-gray-500 p-2">
-                      {item.answer}
+                      {item.snippet}
+                      {item.link && (
+                        <a href={item.link} className="text-blue-600" target="_blank" rel="noopener noreferrer">
+                          {' '}Learn more
+                        </a>
+                      )}
                     </div>
                   </div>
                 </li>
