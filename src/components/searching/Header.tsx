@@ -87,7 +87,7 @@ export const Header: React.FC = () => {
          
         {/* Logo and Search Bar Container */}
         <div className="flex flex-col md:flex-row items-center space-x-2 gap-y-3 md:space-x-4 w-full md:w-auto">
-          <div className="px-5 pl-4 mt-8 md:mt-4 mb-3 w-full flex flex-row-reverse justify-between items-center">
+          <div className=" mt-8 md:mt-4 mb-3 w-full flex flex-row-reverse justify-between items-center">
             <div className="md:hidden">
               <Settings className="h-5 w-5 " />
             </div>

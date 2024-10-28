@@ -169,7 +169,7 @@ const handleSearchBarClick = () => {
 
   return (
     <div className="relative flex justify-center items-center w-full max-w-5xl mx-auto" ref={searchBarRef}>
-      <div className='relative w-[90vw] md:w-[50vw] px-5 py-1 bg-white rounded-2xl shadow-md shadow-gray-200  outline outline-1 outline-[#eceef2]'>
+      <div className='relative w-[95vw] md:w-[50vw] px-5 py-1 bg-white rounded-3xl shadow-md shadow-gray-200  outline outline-1 outline-[#eceef2]'>
         <div className="absolute left-0 top-0 flex items-center pl-4 h-full">
           <Search size={20} color="#4A0A84" />
         </div>
