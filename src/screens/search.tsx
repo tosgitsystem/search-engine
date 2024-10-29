@@ -28,7 +28,7 @@ closeModal();
   const renderContent = () => {
     switch (activeTab) {
       case 'All':
-        return <All  />;
+        return <All />;
       case 'Images':
         return <ImageGallery />;
         case 'News':
@@ -41,7 +41,7 @@ closeModal();
   };
 
   return (
-    <div className="min-h-screen min-w-screen  bg-white">
+    <div className="min-h-screen min-w-screen overflow-x-hidden  bg-white">
       <LargeHeader setActiveTab={setActiveTab} activeTab={activeTab} />
       <div className={`relative z-10 mt-2  ${activeTab === 'Images' ? " md:pl-56 pr-2" : "md:pl-[14rem] md:pr-[18rem]   lg:pl-[14rem] lg:pr-[20rem] xl:pr-[29rem]"}`}>
         <Main renderContent={renderContent} />

@@ -1,5 +1,6 @@
 'use client';
-import { searchQuery, showSuggestion } from '@/src/states/atoms/queryAtom';
+import { refetchQuery, searchQuery, showSuggestion } from '@/src/states/atoms/queryAtom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Mic, Search,  Sparkles, X } from 'lucide-react';
 import React, { useState, ChangeEvent, useEffect, useRef} from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -10,7 +11,7 @@ type SearchBarProps = {
   onInputChange?: (value: string) => void;
 };
 
-const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChange }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChange}) => {
   const query = useRecoilValue(searchQuery);
   const setQuery = useSetRecoilState(searchQuery);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
@@ -21,7 +22,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChan
   const [justSelected, setJustSelected] = useState(false);
   const [listening, setListening] = useState(false);
   const [endSpeech, setEndSpeech] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true); // Add initial load flag
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const queryClient = useQueryClient() 
+  const setRefetchData = useSetRecoilState(refetchQuery);
+
 
   const searchBarRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -108,12 +112,33 @@ const handleSearchBarClick = () => {
       setJustSelected(false);
       return;
     }
-    onInputChange
+    onInputChange && onInputChange(e.target.value);
     setQuery(e.target.value);
   };
 
+ // Handle Enter key press
+ useEffect(() => {
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      console.log("Enter key pressed");
+      setRefetchData(true);
+
+      queryClient.invalidateQueries({ queryKey: ["searchResult"] });
+       // Reset page to 1
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyPress);
+  return () => {
+    window.removeEventListener("keydown", handleKeyPress);
+  };
+}, [query, queryClient]);
+
+
+
   const handleSelect = (value: string) => {
     setQuery(value);
+setRefetchData(true);
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setJustSelected(true);
@@ -232,21 +257,26 @@ type HighlightedTextProps = {
 };
 
 const HighlightedText = ({ text, query }: HighlightedTextProps) => {
-  if (!query) return <>{text}</>;
+  if (!query) return <span>{text}</span>;
 
-  const parts = text.split(new RegExp(`(${query})`, 'gi'));
+  const startIndex = text.toLowerCase().indexOf(query.toLowerCase());
+
+  // If no match found, return the original text
+  if (startIndex === -1) {
+    return <span>{text}</span>;
+  }
+
+  const endIndex = startIndex + query.length;
+  const beforeMatch = text.slice(0, startIndex);
+  const match = text.slice(startIndex, endIndex);
+  const afterMatch = text.slice(endIndex);
+
   return (
-    <>
-      {parts.map((part, index) =>
-        part.toLowerCase() === query.toLowerCase() ? (
-          <span key={index} className="text-gray-400 font-semibold">
-            {part}
-          </span>
-        ) : (
-          <span key={index}>{part}</span>
-        )
-      )}
-    </>
+    <span className='flex'>
+      {beforeMatch}
+      <span className="text-gray-900 font-semibold">{match}</span>
+      {afterMatch}
+    </span>
   );
 };
 

@@ -28,14 +28,14 @@ export const Header: React.FC = () => {
 
   const  isMobile = useRecoilValue(IsMobile);
 
-  const customers = [
-    'Adam', 'Bella', 'Charlie', 'David', 'Fiona', 'George', 'Kelly',
-    'Samantha', 'Harry', 'Olivia', 'Isabella', 'Mason', 'Sophia', 'James', 
-    'Ava', 'Liam', 'Ethan', 'Noah', 'Emma', 'Michael', 'Lucas', 'Amelia',
-    'Alexander', 'Mia', 'Benjamin', 'Charlotte', 'Jack', 'Lily', 'Daniel',
-    'Ella', 'Henry', 'Grace', 'Matthew', 'Zoe', 'Owen', 'Scarlett', 
-    'Ryan', 'Hazel', 'Gabriel', 'Aria', 'William', 'Chloe', 'Sebastian'
-  ];
+  // const customers = [
+  //   'Adam', 'Bella', 'Charlie', 'David', 'Fiona', 'George', 'Kelly',
+  //   'Samantha', 'Harry', 'Olivia', 'Isabella', 'Mason', 'Sophia', 'James', 
+  //   'Ava', 'Liam', 'Ethan', 'Noah', 'Emma', 'Michael', 'Lucas', 'Amelia',
+  //   'Alexander', 'Mia', 'Benjamin', 'Charlotte', 'Jack', 'Lily', 'Daniel',
+  //   'Ella', 'Henry', 'Grace', 'Matthew', 'Zoe', 'Owen', 'Scarlett', 
+  //   'Ryan', 'Hazel', 'Gabriel', 'Aria', 'William', 'Chloe', 'Sebastian'
+  // ];
 
   const handleSelect = (value: string) => {
     console.log('Selected:', value);
@@ -107,8 +107,9 @@ export const Header: React.FC = () => {
           {/* Regular SearchBar */}
           <div className="flex-grow md:mb-0 mb-4 md:mt-0 -mt-4">
             <SearchBar 
-              suggestions={customers}
-              onSelect={handleSelect}
+      suggestions={suggestions?.data.suggestions?.map((s: { value: string }) => s.value) || []}
+   onInputChange={handleInputChange}
+  onSelect={handleSelect}
             />
           </div>
         </div>
