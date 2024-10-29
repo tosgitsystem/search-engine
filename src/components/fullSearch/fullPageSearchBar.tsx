@@ -178,7 +178,7 @@ console.log("clear button clicked")
 
   return (
     <div
-      className="relative flex justify-center items-center w-full max-w-md mx-auto"
+      className="relative flex justify-center items-center w-full max-w-md mx-auto border-b"
       ref={searchBarRef}
     >
       <div
@@ -201,7 +201,7 @@ console.log("clear button clicked")
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           className={classNames(
-            "w-full ml-3 px-4 py-3 bg-transparent focus:outline-none text-white focus:border-blue-500 placeholder-gray-400 text-lg",
+            "w-full ml-3 px-4 py-3 bg-transparent focus:outline-none  focus:border-blue-500 placeholder-gray-400 text-lg",
             { "placeholder-blue-500": listening },
             inputClassName // Ensure custom classes will override default ones
           )}
@@ -233,13 +233,13 @@ console.log("clear button clicked")
 
       {error && <div className="text-sm text-red-500 mt-1">{error}</div>}
 
-      {showSuggestions && (
-        <ul className="absolute max-h-screen top-10 scrollbar-none w-full mt-1  z-[100] "   onClick={() => (console.log("hjxbsjbwjsk"))}>
+      {showSuggestions && filteredSuggestions.length > 0 &&  (
+        <ul className="absolute max-h-screen top-10 border-t scrollbar-none bg-white w-full mt-1  z-[100] "   onClick={() => (console.log("hjxbsjbwjsk"))}>
           {filteredSuggestions.length > 0 ? (
             filteredSuggestions.map((suggestion, index) => (
               <li
                 key={index}
-                className="relative px-4 py-3 text-white cursor-pointer hover:bg-gray-100 z-[101]"
+                className="relative px-4 py-3 text-black cursor-pointer hover:bg-gray-400 z-[101]"
                 onMouseDown={() => {
 
                   console.log("clicked")
@@ -250,7 +250,7 @@ console.log("clear button clicked")
                   className="w-full flex flex-row justify-between items-center"
                  
                 >
-                  <div className="flex flex-row  gap-4" onClick={() => {console.log("clicked")}}>
+                  <div className="flex flex-row w-full  gap-4" onClick={() => {console.log("clicked")}}>
                     <SearchIcon size={18} className="text-center mt-1" />
                     <span>
                       <HighlightedText text={suggestion} query={query} />
@@ -261,7 +261,7 @@ console.log("clear button clicked")
               </li>
             ))
           ) : (
-            <li className="px-4 py-2 text-white">No suggestions</li>
+''
           )}
         </ul>
       )}

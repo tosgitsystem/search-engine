@@ -28,10 +28,12 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
     const [justSelected, setJustSelected] = useState(false);
     const [listening, setListening] = useState(false);
     const [endSpeech, setEndSpeech] = useState(false);
+    const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(-1);
    
 
     const searchBarRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+     const suggestionsRef = useRef<HTMLUListElement>(null)
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -100,6 +102,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
       setFilteredSuggestions([]);
       setShowSuggestions(false);
       setJustSelected(true);
+      setActiveSuggestionIndex(-1);
       onSelect(value);
 
       if (inputRef.current) {
@@ -159,16 +162,48 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
       setListening(false);
     };
 
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-       setShowSuggestions(false);
-        if (query.trim()) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault() // Prevent cursor from moving
+        setActiveSuggestionIndex((prevIndex) =>
+          prevIndex < filteredSuggestions.length - 1 ? prevIndex + 1 : 0
+        )
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault() // Prevent cursor from moving
+        setActiveSuggestionIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : filteredSuggestions.length - 1
+        )
+      } else if (e.key === 'Enter') {
+        if (activeSuggestionIndex >= 0 && filteredSuggestions.length > 0) {
+          handleSelect(filteredSuggestions[activeSuggestionIndex])
+        } else if (query.trim()) {
+          setShowSuggestions(false)
           if (onSearch) {
-            onSearch(query); // Call the search function passed from the parent
+            onSearch(query)
           }
         }
       }
-    };
+    }
+
+    
+    useEffect(() => {
+      if (suggestionsRef.current && activeSuggestionIndex >= 0) {
+        const activeElement = suggestionsRef.current.children[activeSuggestionIndex] as HTMLElement
+        if (activeElement) {
+          const containerTop = suggestionsRef.current.scrollTop
+          const containerBottom = containerTop + suggestionsRef.current.clientHeight
+          const elementTop = activeElement.offsetTop
+          const elementBottom = elementTop + activeElement.offsetHeight
+
+          if (elementTop < containerTop) {
+            suggestionsRef.current.scrollTop = elementTop
+          } else if (elementBottom > containerBottom) {
+            suggestionsRef.current.scrollTop = elementBottom - suggestionsRef.current.clientHeight
+          }
+        }
+      }
+    }, [activeSuggestionIndex])
 
     return (
       <div className="relative flex justify-center items-center w-full max-w-md mx-auto" ref={searchBarRef}>
@@ -187,7 +222,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
             onKeyDown={handleKeyDown}
             onChange={handleChange}
             className={classNames(
-              'w-full ml-1 px-4 py-2 focus:outline-none focus:border-blue-500 placeholder-gray-400',
+              'w-full ml-1 px-4 py-2 focus:outline-none focus:border-blue-500 placeholder-gray-400 bg-white',
               { 'placeholder-blue-500': listening },
               inputClassName // Ensure custom classes will override default ones
             )}
@@ -217,20 +252,24 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
 
         {error && <div className="text-sm text-red-500 mt-1">{error}</div>}
 
-        {showSuggestions && (
+        {showSuggestions && filteredSuggestions.length > 0  && (
           <ul className="absolute max-h-[300px] top-10 overflow-y-scroll overflow-x-hidden w-[350px] mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-[1000] custom-scrollbar">
             {filteredSuggestions.length > 0 ? (
               filteredSuggestions.map((suggestion, index) => (
                 <li
-                  key={index}
-                  className="px-4 py-2 text-nowrap cursor-pointer hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis"
-                  onClick={() => handleSelect(suggestion)}
-                >
+                key={index}
+                className={classNames(
+                  'px-4 py-2 text-nowrap cursor-pointer hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis',
+                  { 'bg-gray-200': index === activeSuggestionIndex } // Highlight the active suggestion
+                )}
+                onMouseDown={() => handleSelect(suggestion)}
+              >
+
                   <HighlightedText text={suggestion} query={query} />
                 </li>
               ))
             ) : (
-              <li className="px-4 py-2 text-gray-500">No suggestions</li>
+              ''
             )}
           </ul>
         )}

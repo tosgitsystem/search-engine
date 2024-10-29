@@ -30,6 +30,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChan
   const searchBarRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(-1);
+  const suggestionsRef = useRef<HTMLUListElement>(null);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchBarRef.current && !searchBarRef.current.contains(event.target as Node)) {
@@ -116,12 +119,20 @@ const handleSearchBarClick = () => {
     setQuery(e.target.value);
   };
 
+  const handleParamsChange = () =>{
+        // Update the URL query parameter
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('q', query); // Set the query parameter
+        window.history.replaceState({}, '', currentUrl);
+  }
+
  // Handle Enter key press
  useEffect(() => {
   const handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
       console.log("Enter key pressed");
       setRefetchData(true);
+      handleParamsChange();
 
       queryClient.invalidateQueries({ queryKey: ["searchResult"] });
        // Reset page to 1
@@ -139,6 +150,7 @@ const handleSearchBarClick = () => {
   const handleSelect = (value: string) => {
     setQuery(value);
 setRefetchData(true);
+handleParamsChange();
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setJustSelected(true);
@@ -192,6 +204,53 @@ setRefetchData(true);
     setListening(false);
   };
 
+
+
+
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (showSuggestions) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setActiveSuggestionIndex((prevIndex) =>
+          prevIndex < filteredSuggestions.length - 1 ? prevIndex + 1 : 0
+        );
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setActiveSuggestionIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : filteredSuggestions.length - 1
+        );
+      } else if (e.key === 'Enter') {
+        if (activeSuggestionIndex >= 0 && filteredSuggestions.length > 0) {
+          handleSelect(filteredSuggestions[activeSuggestionIndex]);
+        } else {
+          setRefetchData(true);
+          handleParamsChange();
+          queryClient.invalidateQueries({ queryKey: ["searchResult"] });
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (suggestionsRef.current && activeSuggestionIndex >= 0) {
+      const activeElement = suggestionsRef.current.children[activeSuggestionIndex] as HTMLElement;
+      if (activeElement) {
+        const containerTop = suggestionsRef.current.scrollTop;
+        const containerBottom = containerTop + suggestionsRef.current.clientHeight;
+        const elementTop = activeElement.offsetTop;
+        const elementBottom = elementTop + activeElement.offsetHeight;
+
+        if (elementTop < containerTop) {
+          suggestionsRef.current.scrollTop = elementTop;
+        } else if (elementBottom > containerBottom) {
+          suggestionsRef.current.scrollTop = elementBottom - suggestionsRef.current.clientHeight;
+        }
+      }
+    }
+  }, [activeSuggestionIndex]);
+
+
   return (
     <div className="relative flex justify-center items-center w-full max-w-5xl mx-auto" ref={searchBarRef}>
       <div className='relative w-[95vw] md:w-[50vw] px-5 py-1 bg-white rounded-3xl shadow-md shadow-gray-200  outline outline-1 outline-[#eceef2]'>
@@ -207,6 +266,7 @@ setRefetchData(true);
           value={query}
           onClick={handleSearchBarClick}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           className={`w-full pl-6 pr-10 py-2 focus:outline-none focus:border-blue-500 ${listening ? 'placeholder-blue-500' : 'placeholder-gray-050'}`}
           placeholder={listening ? 'Listening...' : 'Search...'}
         />
@@ -230,20 +290,23 @@ setRefetchData(true);
 
       {error && <div className="text-sm text-red-500 mt-1">{error}</div>}
 
-      {showSuggestions && (
-        <ul className="absolute top-full left-0 w-full md:w-[50vw] bg-white border border-gray-300 rounded-lg shadow-lg z-[1000] custom-scrollbar max-h-[300px] mt-1 overflow-y-auto">
+      {showSuggestions &&  filteredSuggestions.length > 0 && (
+        <ul ref={suggestionsRef} className="absolute top-full left-0 w-full md:w-[50vw] bg-white border border-gray-300 rounded-lg shadow-lg z-[1000] custom-scrollbar max-h-[300px] mt-1 overflow-y-auto">
           {filteredSuggestions.length > 0 ? (
             filteredSuggestions.map((suggestion, index) => (
               <li
-                key={index}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                onMouseDown={() => handleSelect(suggestion)}
-              >
+              key={index}
+              className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
+                index === activeSuggestionIndex ? 'bg-gray-200' : ''
+              }`}
+              onMouseDown={() => handleSelect(suggestion)}
+            >
+
                 <HighlightedText text={suggestion} query={query} />
               </li>
             ))
           ) : (
-            <li className="px-4 py-2 text-gray-500">No suggestions</li>
+            ''
           )}
         </ul>
       )}
