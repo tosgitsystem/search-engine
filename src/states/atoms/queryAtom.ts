@@ -10,5 +10,11 @@ export const searchQuery = atom<string>({
     key: 'showSuggestion',
     default: false,
   });
+
+
+  export const refetchQuery = atom<boolean>({
+    key: 'refetchData',
+    default: false,
+  });
   
   

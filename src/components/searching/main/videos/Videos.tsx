@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { search } from "@/src/services/search";
-import { searchQuery } from "@/src/states/atoms/queryAtom";
+import { refetchQuery, searchQuery } from "@/src/states/atoms/queryAtom";
 
 interface VideoItem {
   title: string;
@@ -21,12 +21,26 @@ export const VideosResult: React.FC = () => {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState<VideoItem[]>([]);
   const [hasMore, setHasMore] = useState(true);
+  const [refetchData, setRefetchData] = useRecoilState(refetchQuery);
 
-  const { data: videoResult, isLoading } = useQuery({
+  // Fetch videos based on the current page and query
+  const { data: videoResult, isLoading, refetch } = useQuery({
     queryKey: ['videos', query, page],
     queryFn: () => search({ type: "videos", q: query, page }),
   });
 
+  // Handle refetch on query or page change
+  useEffect(() => {
+    if (refetchData) {
+      setAllVideos([]); // Clear existing videos
+      setPage(1); // Reset page to 1
+      setHasMore(true); // Reset the "hasMore" state
+      refetch(); // Trigger refetch
+      setRefetchData(false); // Reset the refetch flag
+    }
+  }, [refetchData, refetch, setRefetchData]);
+
+  // Append new videos to the state when the video results change
   useEffect(() => {
     if (videoResult?.data?.videos) {
       const newVideos = videoResult.data.videos;
@@ -38,6 +52,7 @@ export const VideosResult: React.FC = () => {
     }
   }, [videoResult]);
 
+  // Load more videos when scrolling
   const loadMore = () => {
     if (!isLoading && hasMore) {
       setPage(prevPage => prevPage + 1);

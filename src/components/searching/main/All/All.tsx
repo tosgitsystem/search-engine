@@ -1,33 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RelatedFAQSection } from "./Faq";
 import { Results } from "./Results";
 import { SearchResult } from "@/types";
 import { Search } from "lucide-react";
-import { searchQuery } from "@/src/states/atoms/queryAtom";
+import { refetchQuery, searchQuery } from "@/src/states/atoms/queryAtom";
 import { search } from "@/src/services/search";
 
 interface AllProps {
   searchResult?: SearchResult;
+ 
 }
 
 export const All: React.FC<AllProps> = () => {
   const setQuery = useSetRecoilState(searchQuery);
+  const [refetchData, setRefetchData] = useRecoilState(refetchQuery)
   const queryClient = useQueryClient();
   const query = useRecoilValue(searchQuery);
   const [page, setPage] = useState(1);
 
-  const { data: searchResults, isLoading } = useQuery({
-    queryKey: ['searchResult', { q: query, page }],
+  const { data: searchResults, isLoading,refetch } = useQuery({
+    queryKey: ['searchResult', { page }],
     queryFn: () => search({ type: "search", q: query, page }),
   });
 
   const handleRelatedSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
     setQuery(e.currentTarget.textContent || "");
+    refetch();
+    window.scrollTo({ top: 0, behavior: "smooth" });
     queryClient.invalidateQueries({ queryKey: ["searchResult"] });
     setPage(1);
   };
+
+
+
+   
 
   const handleNextPage = () => {
     setPage(prevPage => prevPage + 1);
@@ -39,7 +47,16 @@ export const All: React.FC<AllProps> = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [query]);
+  }, [query,]);
+
+
+
+    if (refetchData) {
+      refetch();
+      console.log("refetching")
+      setRefetchData(false);
+    }
+
 
   if (isLoading && !searchResults) {
     return <div>Loading...</div>;
@@ -49,18 +66,24 @@ export const All: React.FC<AllProps> = () => {
 
   return (
     <main className="container mx-auto px-3 md:pr-4">
+
+  
       {searchResults?.data?.knowledgeGraph && (
         <div className="border border-gray-200 max-w-3xl rounded-2xl p-4 my-4 bg-white shadow-md">
           <h2 className="text-xl font-semibold">
             {searchResults.data.knowledgeGraph.title}
           </h2>
+          <div className="flex gap-x-3">
+            <div className="w-[30%] ">
           {searchResults.data.knowledgeGraph.imageUrl && (
             <img
               src={searchResults.data.knowledgeGraph.imageUrl}
               alt={searchResults.data.knowledgeGraph.title}
-              className="my-2 rounded"
+              className=" rounded w-full py-2" 
             />
           )}
+          </div>
+          <div className="w-[70%]">
           <p>{searchResults.data.knowledgeGraph.description}</p>
           {searchResults.data.knowledgeGraph.website && (
             <a
@@ -72,6 +95,8 @@ export const All: React.FC<AllProps> = () => {
               {searchResults.data.knowledgeGraph.website}
             </a>
           )}
+          </div>
+          </div>
         </div>
       )}
 

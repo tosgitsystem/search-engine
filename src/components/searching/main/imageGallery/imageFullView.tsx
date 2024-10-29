@@ -16,7 +16,7 @@ export const ImageFullView: React.FC<FullImageModalProps> = ({ isOpen, image,onC
   if (!isOpen || !image) return null;
 
   return (
-    <div className="  flex items-center justify-center -mt-1 ">
+    <div className="fixed  flex items-center justify-center -mt-1 ">
       <div className="bg-white rounded-lg max-w-3xl w-full">
         <div className="flex items-center justify-between pb-4 border-b">
        

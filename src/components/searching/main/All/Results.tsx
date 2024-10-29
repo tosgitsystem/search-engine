@@ -45,7 +45,7 @@ export const Results: React.FC<ResultsProps> = ({ organicResults }) => {
             className="max-w-full md:max-w-2xl bg-white p-4 rounded-2xl shadow-sm"
           >
             {result.link && (
-              <div className="text-sm text-gray-600">{result.link}</div>
+              <div className="text-sm text-gray-600 overflow-x-hidden">{result.link}</div>
             )}
             <a
               href={result.link}

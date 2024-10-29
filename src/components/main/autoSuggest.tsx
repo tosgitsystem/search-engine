@@ -8,6 +8,7 @@ import { searchQuery, showSuggestion } from '@/src/states/atoms/queryAtom'; // R
 type SearchBarProps = {
   suggestions: string[];
   onSelect: (value: string) => void;
+  onInputChange?: (value: string) => void;
   disabled?: boolean;
   inputClassName?: string;
   onSearch?: (query: string) => void; // Custom className prop for input element
@@ -18,7 +19,7 @@ type SearchBarHandle = {
 };
 
 const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
-  ({ suggestions, onSelect, disabled, inputClassName, onSearch }) => {
+  ({ suggestions, onSelect, disabled, inputClassName, onSearch,onInputChange }) => {
     const [query, setQuery] = useRecoilState<string>(searchQuery); // Using Recoil state with explicit type
     const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
     const [showSuggestions, setShowSuggestions] = useRecoilState<boolean>(showSuggestion);
@@ -90,6 +91,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
         setJustSelected(false);
         return;
       }
+      onInputChange && onInputChange(e.target.value);
       setQuery(e.target.value); // Updating Recoil state
     };
 
@@ -221,7 +223,7 @@ const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(
               filteredSuggestions.map((suggestion, index) => (
                 <li
                   key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                  className="px-4 py-2 text-nowrap cursor-pointer hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis"
                   onClick={() => handleSelect(suggestion)}
                 >
                   <HighlightedText text={suggestion} query={query} />
@@ -245,22 +247,26 @@ type HighlightedTextProps = {
 };
 
 const HighlightedText = ({ text, query }: HighlightedTextProps) => {
-  if (!query) return <>{text}</>;
+  if (!query) return <span>{text}</span>;
 
-  const parts = text.split(new RegExp(`(${query})`, 'gi'));
+  const startIndex = text.toLowerCase().indexOf(query.toLowerCase());
+
+  // If no match found, return the original text
+  if (startIndex === -1) {
+    return <span>{text}</span>;
+  }
+
+  const endIndex = startIndex + query.length;
+  const beforeMatch = text.slice(0, startIndex);
+  const match = text.slice(startIndex, endIndex);
+  const afterMatch = text.slice(endIndex);
+
   return (
-    <>
-      {parts.map((part, index) =>
-        part.toLowerCase() === query.toLowerCase() ? (
-          <span key={index} className="text-gray-400 font-semibold">
-            {part}
-          </span>
-        ) : (
-          <span key={index}>{part}</span>
-        )
-      )}
-    </>
+    <span className='flex'>
+      {beforeMatch}
+      <span className="text-gray-900 font-semibold">{match}</span>
+      {afterMatch}
+    </span>
   );
 };
-
 export default SearchBar;

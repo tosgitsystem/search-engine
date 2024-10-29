@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { search } from "@/src/services/search";
-import { searchQuery } from "@/src/states/atoms/queryAtom";
+import { refetchQuery, searchQuery } from "@/src/states/atoms/queryAtom";
 import { Calendar, Globe } from "lucide-react";
 
 
@@ -21,9 +21,10 @@ export const NewsPage = () => {
 
   const [allNews, setAllNews] = useState<NewsArticle[]>([]);
   const [hasMore, setHasMore] = useState(true);
+  const [refetchData, setRefetchData] = useRecoilState(refetchQuery);
 
-  const { data: newsResult, isLoading, } = useQuery({
-    queryKey: ['news', query, page],
+  const { data: newsResult, isLoading,refetch } = useQuery({
+    queryKey: ['news', page],
     queryFn: () => search({ type: "news", q: query, page }),
 
   });
@@ -44,6 +45,12 @@ export const NewsPage = () => {
       setPage(prevPage => prevPage + 1);
     }
   };
+
+  if (refetchData) {
+    refetch();
+    console.log("refetching")
+    setRefetchData(false);
+  }
 
 
   return (
