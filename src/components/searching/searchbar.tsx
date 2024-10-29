@@ -17,7 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChan
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const showSuggestions = useRecoilValue(showSuggestion);
   const setShowSuggestions = useSetRecoilState(showSuggestion);
-  const [debouncedQuery, setDebouncedQuery] = useState(query);
+  const [debouncedQuery] = useState(query);
   const [error, setError] = useState<string | null>(null);
   const [justSelected, setJustSelected] = useState(false);
   const [listening, setListening] = useState(false);
@@ -50,10 +50,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChan
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedQuery(query);
+      //setDebouncedQuery(query);
       if(isInitialLoad) {
         setShowSuggestions(false);
         setIsInitialLoad(false);
+        handleParamsChange(query);
       }
       console.log("debouncedQuery", debouncedQuery);
     }, 300);
@@ -91,6 +92,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ suggestions, onSelect,onInputChan
       setError(null);
     }
 
+
+
     // Set initial load to false after the first render
     if (isInitialLoad) {
       setIsInitialLoad(false);
@@ -119,10 +122,11 @@ const handleSearchBarClick = () => {
     setQuery(e.target.value);
   };
 
-  const handleParamsChange = () =>{
+  const handleParamsChange = (value:string) =>{
         // Update the URL query parameter
         const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('q', query); // Set the query parameter
+        console.log("currentUrl",value);
+        currentUrl.searchParams.set('q', value); // Set the query parameter
         window.history.replaceState({}, '', currentUrl);
   }
 
@@ -132,7 +136,8 @@ const handleSearchBarClick = () => {
     if (e.key === "Enter") {
       console.log("Enter key pressed");
       setRefetchData(true);
-      handleParamsChange();
+      handleParamsChange(query);
+   
 
       queryClient.invalidateQueries({ queryKey: ["searchResult"] });
        // Reset page to 1
@@ -150,7 +155,7 @@ const handleSearchBarClick = () => {
   const handleSelect = (value: string) => {
     setQuery(value);
 setRefetchData(true);
-handleParamsChange();
+handleParamsChange(value);
     setFilteredSuggestions([]);
     setShowSuggestions(false);
     setJustSelected(true);
@@ -223,9 +228,10 @@ handleParamsChange();
       } else if (e.key === 'Enter') {
         if (activeSuggestionIndex >= 0 && filteredSuggestions.length > 0) {
           handleSelect(filteredSuggestions[activeSuggestionIndex]);
+          handleParamsChange(filteredSuggestions[activeSuggestionIndex]);
         } else {
           setRefetchData(true);
-          handleParamsChange();
+       
           queryClient.invalidateQueries({ queryKey: ["searchResult"] });
         }
       }

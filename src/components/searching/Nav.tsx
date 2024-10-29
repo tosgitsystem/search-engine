@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Image, Newspaper, Settings2, Video } from 'lucide-react'; // Import icons
+import { Home, Image, Newspaper, Video } from 'lucide-react'; // Import icons
 
 interface NavProps {
   setActiveTab: (tab: string) => void;
@@ -38,7 +38,7 @@ export const Nav: React.FC<NavProps> = ({ setActiveTab, activeTab }) => {
             
           </div>
         ))}
-        <Settings2 className=' absolute md:right-0 right-5 top-1 h-5 w-5' color='#4A0A84'/>
+        {/* <Settings2 className=' absolute md:right-0 right-5 top-1 h-5 w-5' color='#4A0A84'/> */}
       </div>
     </nav>
   );

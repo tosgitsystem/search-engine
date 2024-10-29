@@ -96,7 +96,7 @@ margin-bottom: 0 !important;
 
 
 
-.ReactGridGallery_tile-bottom-bar > div 
+.ReactGridGallery_tile-bottom-bar > div >span
 {
   display: -webkit-box; /* For Safari */
   -webkit-box-orient: vertical;
@@ -106,7 +106,7 @@ margin-bottom: 0 !important;
   text-overflow: ellipsis;
   margin-left: 0px !important;
 
-  color: #9599a9 !important;
+  color: #21784A !important;
 }
 .ReactGridGallery_tile {
   background: white !important;
