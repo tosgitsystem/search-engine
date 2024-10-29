@@ -23,7 +23,10 @@ export const All: React.FC<AllProps> = () => {
   const { data: searchResults, isLoading,refetch } = useQuery({
     queryKey: ['searchResult', { page }],
     queryFn: () => search({ type: "search", q: query, page }),
+
   });
+
+
 
   const handleRelatedSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
     setQuery(e.currentTarget.textContent || "");
@@ -76,7 +79,7 @@ export const All: React.FC<AllProps> = () => {
           <div className="flex gap-x-3">
             <div className="w-[30%] ">
           {searchResults.data.knowledgeGraph.imageUrl && (
-            <img
+           <img
               src={searchResults.data.knowledgeGraph.imageUrl}
               alt={searchResults.data.knowledgeGraph.title}
               className=" rounded w-full py-2" 
@@ -130,24 +133,31 @@ export const All: React.FC<AllProps> = () => {
         </div>
       )}
 
-      <div className="flex justify-between my-4 max-w-3xl">
+     <div className="flex justify-between items-center my-4 max-w-3xl">
         <button
           onClick={handlePreviousPage}
           disabled={page === 1}
-          className={`px-4 py-2 rounded-md ${
+          className={`flex items-center px-4 py-2 rounded-full border ${
             page === 1
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              ? "border-gray-300 text-gray-300 cursor-not-allowed"
+              : "border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-900"
           }`}
         >
+          <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
           Previous
         </button>
+        <span className="text-gray-700">Page {page}</span>
         {hasNextPage && (
           <button
             onClick={handleNextPage}
-            className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700"
+            className="flex items-center px-4 py-2 rounded-full border border-gray-300 text-gray-700 hover:border-gray-400 hover:text-gray-900"
           >
             Next
+            <svg className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+            </svg>
           </button>
         )}
       </div>

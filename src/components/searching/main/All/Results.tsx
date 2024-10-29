@@ -38,18 +38,18 @@ export const Results: React.FC<ResultsProps> = ({ organicResults }) => {
 
   return (
     <div>
-      <div className="space-y-6">
+      <div className="space-y-6 pt-4 ">
         {organicResults?.map((result, index) => (
           <div
             key={index}
             className="max-w-full md:max-w-2xl bg-white p-4 rounded-2xl shadow-sm"
           >
             {result.link && (
-              <div className="text-sm text-gray-600 overflow-x-hidden">{result.link}</div>
+              <div className="text-sm text-[#21784A] overflow-x-hidden">{result.link}</div>
             )}
             <a
               href={result.link}
-              className="text-lg text-[#4A0A84] font-[1400] cursor-pointer"
+              className="text-lg text-[#7119c0] font-[1400] cursor-pointer"
             >
               {result.title}=
             </a>

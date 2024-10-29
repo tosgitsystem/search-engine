@@ -96,8 +96,8 @@ margin-bottom: 0 !important;
 
 
 
-.ReactGridGallery_tile-bottom-bar > div,
-span {
+.ReactGridGallery_tile-bottom-bar > div 
+{
   display: -webkit-box; /* For Safari */
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1; 
