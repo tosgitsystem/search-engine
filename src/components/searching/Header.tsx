@@ -13,9 +13,12 @@ export const Header: React.FC = () => {
   const [query, setQuery] = useState<string>("");
   const queryClient = useQueryClient();
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isSelecting, setIsSelecting] = useState(false); // New state to track selection
 
   const handleSelect = (value: string) => {
-    console.log('Selected:', value);
+    console.log("Selected:", value);
+    setQuery(value); // Set the full selected value
+    setIsSelecting(true); // Flag that a selection was made
   };
 
   useEffect(() => {
@@ -32,26 +35,37 @@ export const Header: React.FC = () => {
   const { data: suggestions } = useQuery({
     queryKey: ["searchAutocomplete", query],
     queryFn: () => search({ type: "autocomplete", q: query }),
-    enabled: !!query,
+    enabled: !!query && !isSelecting, // Disable query when selecting
     staleTime: 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
-  const debouncedSearch = useCallback((input: string) => {
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
+  const debouncedSearch = useCallback(
+    (input: string) => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
 
-    debounceTimerRef.current = setTimeout(() => {
-      setQuery(input);
-      queryClient.invalidateQueries({ queryKey: ["searchAutocomplete"] });
-    }, 300);
-  }, [queryClient]);
+      debounceTimerRef.current = setTimeout(() => {
+        setQuery(input);
+        queryClient.invalidateQueries({ queryKey: ["searchAutocomplete"] });
+      }, 300);
+    },
+    [queryClient]
+  );
 
-  const handleInputChange = useCallback((input: string) => {
-    queryClient.cancelQueries({ queryKey: ["searchAutocomplete"] });
-    debouncedSearch(input);
-  }, [debouncedSearch, queryClient]);
+  const handleInputChange = useCallback(
+    (input: string) => {
+      if (isSelecting) {
+        // Reset the selection flag once the input is handled
+        setIsSelecting(false);
+        return;
+      }
+      queryClient.cancelQueries({ queryKey: ["searchAutocomplete"] });
+      debouncedSearch(input);
+    },
+    [debouncedSearch, isSelecting, queryClient]
+  );
 
   useEffect(() => {
     return () => {
@@ -78,13 +92,15 @@ export const Header: React.FC = () => {
                 className="mx-auto md:mx-0"
               />
             </a>
-            <div>
-              {/*  */}
-            </div>
+            <div>{/*  */}</div>
           </div>
           <div className="flex-grow md:mb-0 mb-4 md:mt-0 -mt-4">
-            <SearchBar 
-              suggestions={suggestions?.data.suggestions?.map((s: { value: string }) => s.value) || []}
+            <SearchBar
+              suggestions={
+                suggestions?.data.suggestions?.map(
+                  (s: { value: string }) => s.value
+                ) || []
+              }
               onInputChange={handleInputChange}
               onSelect={handleSelect}
             />
@@ -98,8 +114,12 @@ export const Header: React.FC = () => {
       {isMobile && showFixedSearchBar && (
         <div className="fixed top-0 left-0 right-0 bg-white z-50 border-b p-4 pb-2">
           <div className="container mx-auto">
-            <SearchBar 
-              suggestions={suggestions?.data.suggestions?.map((s: { value: string }) => s.value) || []}
+            <SearchBar
+              suggestions={
+                suggestions?.data.suggestions?.map(
+                  (s: { value: string }) => s.value
+                ) || []
+              }
               onInputChange={handleInputChange}
               onSelect={handleSelect}
             />

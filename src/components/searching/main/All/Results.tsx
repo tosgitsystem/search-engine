@@ -45,13 +45,13 @@ export const Results: React.FC<ResultsProps> = ({ organicResults }) => {
             className="max-w-full md:max-w-2xl bg-white p-4 rounded-2xl shadow-sm"
           >
             {result.link && (
-              <div className="text-sm text-[#21784A] overflow-x-hidden">{result.link}</div>
+              <div className="text-sm text-[#21784A] max-w-[250px] overflow-x-hidden text-nowrap">{result.link}</div>
             )}
             <a
               href={result.link}
               className="text-lg text-[#7119c0] font-[1400] cursor-pointer"
             >
-              {result.title}=
+              {result.title}
             </a>
             <p className="text-sm text-gray-700">
               {highlightText(result.snippet || '', result.snippetHighlighted)}

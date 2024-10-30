@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RelatedFAQSection } from "./Faq";
 import { Results } from "./Results";
 import { SearchResult } from "@/types";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { refetchQuery, searchQuery } from "@/src/states/atoms/queryAtom";
 import { search } from "@/src/services/search";
 
@@ -62,7 +62,7 @@ export const All: React.FC<AllProps> = () => {
 
 
   if (isLoading && !searchResults) {
-    return <div>Loading...</div>;
+    return <div className="absolute top-1/2 left-1/2"><Loader2 className="animate-spin"/></div>;
   }
 
   const hasNextPage = searchResults?.data?.organic && searchResults.data.organic.length > 0;
@@ -118,12 +118,12 @@ export const All: React.FC<AllProps> = () => {
           <h3 className="font-semibold text-lg flex items-center">
             <Search className="w-5 h-5 mr-2" /> Related queries
           </h3>
-          <div className="grid grid-cols-2 gap-3 mt-4">
+          <div className="grid md:grid-cols-2 gap-3 mt-4">
             {searchResults.data.relatedSearches.map((search: { query: string }, index: number) => (
               <button
                 key={index}
                 onClick={handleRelatedSearch}
-                className="flex items-center text-start p-2 border border-gray-200 rounded-full text-gray-700 hover:bg-gray-100 transition-all"
+                className="flex items-center text-start p-2 border border-gray-200 rounded-full text-gray-700 hover:bg-gray-100 transition-all line-clamp-2 "
               >
                 <Search className="w-4 h-4 mr-2 text-gray-500" />
                 {search.query}

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { search } from "@/src/services/search";
 import { refetchQuery, searchQuery } from "@/src/states/atoms/queryAtom";
+import { Loader2 } from "lucide-react";
 
 interface VideoItem {
   title: string;
@@ -66,7 +67,7 @@ export const VideosResult: React.FC = () => {
           dataLength={allVideos.length}
           next={loadMore}
           hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
+          loader={<div className="absolute top-1/2 left-1/2"><Loader2 className="animate-spin"/></div> }
           endMessage={
             <p style={{ textAlign: 'center' }}>
               <b>You have seen all videos</b>

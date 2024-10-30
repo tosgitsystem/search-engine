@@ -7,6 +7,7 @@ import { refetchQuery, searchQuery } from "@/src/states/atoms/queryAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Loader2 } from "lucide-react";
 
 interface ApiImage {
   title: string;
@@ -128,7 +129,7 @@ export const ImageGallery = () => {
             dataLength={allImages.length}
             next={loadMore}
             hasMore={hasMore}
-            loader={<h4>Loading...</h4>}
+            loader={ <div className="absolute top-1/2 left-1/2"><Loader2 className="animate-spin"/></div>  }
             endMessage={
               <p style={{ textAlign: "center" }}>
                 <b>You have seen all images</b>

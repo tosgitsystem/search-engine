@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { search } from "@/src/services/search";
 import { refetchQuery, searchQuery } from "@/src/states/atoms/queryAtom";
-import { Calendar, Globe } from "lucide-react";
+import { Calendar, Globe, Loader2 } from "lucide-react";
 
 
 export const NewsPage = () => {
@@ -58,14 +58,15 @@ export const NewsPage = () => {
     dataLength={allNews.length}
     next={loadMore}
     hasMore={hasMore}
-    loader={<h4>Loading...</h4>}
+    loader={<div className="absolute top-1/2 left-1/2"><Loader2 className="animate-spin"/></div> }
     endMessage={
       <p style={{ textAlign: 'center' }}>
         <b>You have seen all news</b>
       </p>
     }
+    className="px-3"
   >
-      <div className="py-4 md:pr-4 border rounded-2xl">
+      <div className="py-4 md:pr-4 border rounded-2xl ">
         {allNews.map((article, index) => (
           <div key={index} className="flex items-center py-4 px-1 bg-white">
             <div className="flex-grow">
